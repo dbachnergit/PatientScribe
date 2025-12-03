@@ -1,0 +1,2991 @@
+[
+  {
+    "id": "alien",
+    "name": "Alien",
+    "type": "standard",
+    "colorKeywords": [
+      "Green",
+      "lime green",
+      "neon green",
+      "vibrant green",
+      "light green",
+      "dark",
+      "contrast",
+      "vibrant",
+      "neon",
+      "colorful",
+      "contrast"
+    ],
+    "toneKeywords": [
+      "playful",
+      "friendly",
+      "fun",
+      "complex",
+      "bold",
+      "loud",
+      "high tech",
+      "futuristic",
+      "young",
+      "fresh",
+      "creative",
+      "modern",
+      "unique",
+      "strong",
+      "opinionated"
+    ]
+  },
+  {
+    "id": "ash",
+    "name": "Ash",
+    "type": "standard",
+    "colorKeywords": [
+      "black",
+      "white",
+      "light gray",
+      "b&w",
+      "high contrast",
+      "light"
+    ],
+    "toneKeywords": [
+      "Geometric",
+      "serious",
+      "formal",
+      "professional",
+      "clean",
+      "subtle",
+      "bold",
+      "modern",
+      "mature"
+    ]
+  },
+  {
+    "id": "ashrose",
+    "name": "Ashrose",
+    "type": "standard",
+    "colorKeywords": [
+      "Pearlescent White",
+      "Holographic Silver",
+      "Soft Lavender",
+      "Lilac Shimmer",
+      "white",
+      "silver",
+      "gray",
+      "light purple",
+      "Muted rose",
+      "mauve",
+      "dusty lavender",
+      "soft blush",
+      "ivory",
+      "taupe",
+      "warm gray",
+      "ashrose"
+    ],
+    "toneKeywords": [
+      "Iridescent",
+      "Metallic",
+      "Pearlescent",
+      "Pastel",
+      "Shimmer",
+      "Glossy",
+      "Soft",
+      "Translucent",
+      "Dreamy",
+      "Futuristic",
+      "Soft",
+      "elegant",
+      "quiet",
+      "serious",
+      "clean",
+      "minimal",
+      "vintage",
+      "modern",
+      "professional"
+    ]
+  },
+  {
+    "id": "atacama",
+    "name": "Atacama",
+    "type": "standard",
+    "colorKeywords": [
+      "dark",
+      "black",
+      "neon",
+      "white",
+      "contrast",
+      "pink",
+      "cool",
+      "vibrant",
+      "hot pink",
+      "fuchsia"
+    ],
+    "toneKeywords": [
+      "playful",
+      "complex",
+      "loud",
+      "bold",
+      "expensive",
+      "modern",
+      "high tech",
+      "fresh",
+      "creative",
+      "geometric",
+      "night",
+      "bold"
+    ]
+  },
+  {
+    "id": "atmosphere",
+    "name": "Atmosphere",
+    "type": "standard",
+    "colorKeywords": [
+      "light",
+      "orange",
+      "salmon",
+      "pink",
+      "purple",
+      "gradient",
+      "colorful",
+      "warm",
+      "pastel",
+      "vibrant",
+      "blush",
+      "violet"
+    ],
+    "toneKeywords": [
+      "feminine",
+      "playful",
+      "friendly",
+      "bold",
+      "loud",
+      "modern",
+      "high tech",
+      "young",
+      "fresh",
+      "organic",
+      "creative",
+      "aesthetic",
+      "inspirational",
+      "bold",
+      "fun"
+    ]
+  },
+  {
+    "id": "aurora",
+    "name": "Aurora",
+    "type": "standard",
+    "colorKeywords": [
+      "dark",
+      "gradient",
+      "fuchsia",
+      "pink",
+      "purple",
+      "violet",
+      "blue",
+      "royal blue",
+      "navy",
+      "vibrant",
+      "colorful",
+      "cool"
+    ],
+    "toneKeywords": [
+      "professional",
+      "playful",
+      "friendly",
+      "bold",
+      "modern",
+      "high tech",
+      "futuristic",
+      "fresh",
+      "aesthetic",
+      "creative",
+      "inspirational",
+      "fun"
+    ]
+  },
+  {
+    "id": "aurum",
+    "name": "Aurum",
+    "type": "standard",
+    "colorKeywords": [
+      "gold",
+      "metallic",
+      "black",
+      "metal",
+      "golden"
+    ],
+    "toneKeywords": [
+      "classy",
+      "formal",
+      "elegant",
+      "professional",
+      "complex",
+      "bold",
+      "loud",
+      "luxury",
+      "deluxe",
+      "expensive",
+      "classic",
+      "geometric",
+      "fancy",
+      "chic",
+      "royal",
+      "shiny",
+      "metal"
+    ]
+  },
+  {
+    "id": "default-dark",
+    "name": "Basic Dark",
+    "type": "standard",
+    "colorKeywords": [
+      "dark",
+      "black",
+      "blue",
+      "purple",
+      "b&w",
+      "warm"
+    ],
+    "toneKeywords": [
+      "serious",
+      "formal",
+      "professional",
+      "minimalist",
+      "bold",
+      "loud",
+      "luxurious",
+      "modern",
+      "high tech",
+      "bold"
+    ]
+  },
+  {
+    "id": "default-light",
+    "name": "Basic Light",
+    "type": "standard",
+    "colorKeywords": [
+      "light",
+      "blue",
+      "white",
+      "black",
+      "b&w",
+      "navy",
+      "cool"
+    ],
+    "toneKeywords": [
+      "serious",
+      "corporate",
+      "formal",
+      "casual",
+      "professional",
+      "tech",
+      "simple",
+      "subtle",
+      "quiet",
+      "bold",
+      "modern"
+    ]
+  },
+  {
+    "id": "bee-happy",
+    "name": "Bee Happy",
+    "type": "standard",
+    "colorKeywords": [
+      "yellow",
+      "bright",
+      "dark"
+    ],
+    "toneKeywords": [
+      "soft",
+      "rounded",
+      "contrast",
+      "friendly"
+    ]
+  },
+  {
+    "id": "blueberry",
+    "name": "Blueberry ",
+    "type": "standard",
+    "colorKeywords": [
+      "blueberry",
+      "purple",
+      "indigo",
+      "pink",
+      "dark",
+      "vibrant",
+      "colorful",
+      "flashy",
+      "contrast",
+      "neon",
+      "contrast",
+      "orange pink"
+    ],
+    "toneKeywords": [
+      "Playful",
+      "friendly",
+      "fun",
+      "bold",
+      "loud",
+      "modern",
+      "high tech",
+      "fresh",
+      "young"
+    ]
+  },
+  {
+    "id": "blues",
+    "name": "Blues",
+    "type": "standard",
+    "colorKeywords": [
+      "dark blue",
+      "royal blue",
+      "indigo",
+      "navy blue",
+      "white",
+      "dark",
+      "cool"
+    ],
+    "toneKeywords": [
+      "classy",
+      "complex",
+      "bold",
+      "loud",
+      "professional",
+      "luxury",
+      "deluxe",
+      "expensive",
+      "modern",
+      "fresh",
+      "aesthetic",
+      "creative",
+      "organic",
+      "night",
+      "fluid",
+      "starry"
+    ]
+  },
+  {
+    "id": "blue-steel",
+    "name": "Blue Steel",
+    "type": "standard",
+    "colorKeywords": [
+      "dark",
+      "black",
+      "gray",
+      "blue",
+      "navy",
+      "gradient",
+      "cool"
+    ],
+    "toneKeywords": [
+      "corporate",
+      "friendly",
+      "clean",
+      "soft",
+      "modern",
+      "futuristic",
+      "mature"
+    ]
+  },
+  {
+    "id": "bonan-hale",
+    "name": "Bonan Hale",
+    "type": "standard",
+    "colorKeywords": [
+      "black",
+      "gray",
+      "yellow"
+    ],
+    "toneKeywords": [
+      "dark",
+      "modern",
+      "minimalist",
+      "professional"
+    ]
+  },
+  {
+    "id": "borealis",
+    "name": "Borealis",
+    "type": "standard",
+    "colorKeywords": [
+      "dark",
+      "navy",
+      "royal blue",
+      "turquoise",
+      "vibrant",
+      "neon",
+      "teal",
+      "green",
+      "blue",
+      "gradient",
+      "colorful",
+      "contrast",
+      "colorful"
+    ],
+    "toneKeywords": [
+      "playful",
+      "friendly",
+      "casual",
+      "fun",
+      "bold",
+      "loud",
+      "modern",
+      "high tech",
+      "futuristic",
+      "young",
+      "fresh",
+      "creative"
+    ]
+  },
+  {
+    "id": "breeze",
+    "name": "Breeze",
+    "type": "standard",
+    "colorKeywords": [
+      "blue",
+      "soft blue",
+      "light blue",
+      "sky blue",
+      "powder blue",
+      "white",
+      "cool",
+      "light"
+    ],
+    "toneKeywords": [
+      "simple",
+      "soft",
+      "subtle",
+      "modern",
+      "fresh",
+      "young"
+    ]
+  },
+  {
+    "id": "bubble-gum",
+    "name": "Bubble Gum",
+    "type": "standard",
+    "colorKeywords": [
+      "black",
+      "dark",
+      "pink",
+      "warm pink",
+      "calm pink",
+      "bubblegum pink",
+      "soft pink",
+      "warm",
+      "dark gray"
+    ],
+    "toneKeywords": [
+      "Playful",
+      "friendly",
+      "casual",
+      "fun",
+      "simple",
+      "modern",
+      "fresh",
+      "young",
+      "retro"
+    ]
+  },
+  {
+    "id": "canaveral",
+    "name": "Canaveral",
+    "type": "standard",
+    "colorKeywords": [
+      "dark",
+      "orange",
+      "salmon",
+      "black",
+      "neon",
+      "vibrant",
+      "colorful",
+      "warm",
+      "contrast"
+    ],
+    "toneKeywords": [
+      "playful",
+      "bold",
+      "loud",
+      "modern",
+      "futuristic",
+      "high tech",
+      "fresh",
+      "creative",
+      "fun"
+    ]
+  },
+  {
+    "id": "chimney-dust",
+    "name": "Chimney Dust",
+    "type": "standard",
+    "colorKeywords": [
+      "dark",
+      "gray",
+      "dark gray",
+      "charcoal gray",
+      "black",
+      "chrome",
+      "silver",
+      "gradient"
+    ],
+    "toneKeywords": [
+      "serious",
+      "corporate",
+      "formal",
+      "simple",
+      "clean",
+      "subtle",
+      "bold",
+      "high tech",
+      "mature"
+    ]
+  },
+  {
+    "id": "chimney-smoke",
+    "name": "Chimney Smoke",
+    "type": "standard",
+    "colorKeywords": [
+      "White",
+      "light",
+      "light gray",
+      "silver",
+      "chrome",
+      "b&W",
+      "cool",
+      "bright",
+      "gray",
+      "dark gray"
+    ],
+    "toneKeywords": [
+      "serious",
+      "corporate",
+      "formal",
+      "elegant",
+      "professional",
+      "simple",
+      "minimalist",
+      "clean",
+      "quiet",
+      "subtle",
+      "soft",
+      "modern",
+      "classy",
+      "mature"
+    ]
+  },
+  {
+    "id": "chisel",
+    "name": "Chisel",
+    "type": "standard",
+    "colorKeywords": [
+      "white",
+      "tan",
+      "brown",
+      "beige",
+      "neutral",
+      "subtle"
+    ],
+    "toneKeywords": [
+      "professional",
+      "simple",
+      "modern",
+      "serif",
+      "earthy"
+    ]
+  },
+  {
+    "id": "chocolate",
+    "name": "Chocolate",
+    "type": "standard",
+    "colorKeywords": [
+      "Brown",
+      "blush beige",
+      "dusty rose",
+      "espresso color",
+      "dark",
+      "warm",
+      "earthy"
+    ],
+    "toneKeywords": [
+      "feminine",
+      "serious",
+      "classy",
+      "professional",
+      "simple",
+      "bold",
+      "luxury",
+      "classic",
+      "mature"
+    ]
+  },
+  {
+    "id": "cigar",
+    "name": "Cigar",
+    "type": "standard",
+    "colorKeywords": [
+      "sienna",
+      "chestnut color",
+      "cinnamon brown",
+      "copper color",
+      "terracotta color",
+      "umber",
+      "earthy",
+      "warm",
+      "dark",
+      "tan",
+      "black",
+      "dark brown"
+    ],
+    "toneKeywords": [
+      "feminine",
+      "serious",
+      "classy",
+      "corporate",
+      "formal",
+      "elegant",
+      "professional",
+      "simple",
+      "minimalist",
+      "clean",
+      "subtle",
+      "quiet",
+      "soft",
+      "luxury",
+      "deluxe",
+      "expensive",
+      "modern",
+      "classic",
+      "traditional",
+      "mature",
+      "aesthetic",
+      "organic"
+    ]
+  },
+  {
+    "id": "gad9zyzgkqa7yx7",
+    "name": "Citron",
+    "type": "custom"
+  },
+  {
+    "id": "clementa",
+    "name": "Clementa",
+    "type": "standard",
+    "colorKeywords": [
+      "pumpkin orange",
+      "chocolate brown",
+      "golden tan",
+      "burnt umber",
+      "cream",
+      "warm beige"
+    ],
+    "toneKeywords": [
+      "Warm",
+      "retro",
+      "grounded",
+      "bold",
+      "optimistic",
+      "professional",
+      "nostalgic",
+      "earthy"
+    ]
+  },
+  {
+    "id": "coal",
+    "name": "Coal",
+    "type": "standard",
+    "colorKeywords": [
+      "gray",
+      "white",
+      "dark gray",
+      "b&w",
+      "high contrast",
+      "dark",
+      "grayscale"
+    ],
+    "toneKeywords": [
+      "Serious",
+      "corporate",
+      "formal",
+      "professional",
+      "simple",
+      "subtle",
+      "bold",
+      "modern",
+      "mature",
+      "geometric"
+    ]
+  },
+  {
+    "id": "commons",
+    "name": "Commons",
+    "type": "standard",
+    "colorKeywords": [
+      "light",
+      "gray",
+      "white",
+      "green"
+    ],
+    "toneKeywords": [
+      "professional",
+      "clean",
+      "modern",
+      "simple",
+      "tech",
+      "minimal"
+    ]
+  },
+  {
+    "id": "consultant",
+    "name": "Consultant",
+    "type": "standard",
+    "colorKeywords": [
+      "light",
+      "blue",
+      "white",
+      "cool"
+    ],
+    "toneKeywords": [
+      "consulting",
+      "corporate",
+      "formal",
+      "business",
+      "professional",
+      "simple",
+      "modern",
+      "serious",
+      "serif"
+    ]
+  },
+  {
+    "id": "coral-glow",
+    "name": "Coral Glow",
+    "type": "standard",
+    "colorKeywords": [
+      "coral pink",
+      "peach",
+      "blush",
+      "rose",
+      "pastel",
+      "salmon",
+      "nude",
+      "pink",
+      "soft orange",
+      "gradient",
+      "crystal",
+      "holographic",
+      "warm",
+      "glowing",
+      "radiant"
+    ],
+    "toneKeywords": [
+      "Fresh",
+      "modern",
+      "uplifting",
+      "calming",
+      "creative",
+      "stylish",
+      "inspiring",
+      "playful",
+      "balanced",
+      "vibrant"
+    ]
+  },
+  {
+    "id": "cornfield",
+    "name": "Cornfield",
+    "type": "standard",
+    "colorKeywords": [
+      "olive green",
+      "moss green",
+      "army green",
+      "muted green",
+      "khaki green",
+      "mustard yellow",
+      "goldenrod",
+      "ochre",
+      "harvest gold",
+      "warm yellow",
+      "sand beige",
+      "cream",
+      "soft ivory",
+      "light tan",
+      "parchment"
+    ],
+    "toneKeywords": [
+      "fun",
+      "classy",
+      "playful",
+      "vintage",
+      "loud",
+      "necessity",
+      "classic",
+      "mature",
+      "organic"
+    ]
+  },
+  {
+    "id": "cornflower",
+    "name": "Cornflower",
+    "type": "standard",
+    "colorKeywords": [
+      "blue",
+      "calm blue",
+      "sky blue",
+      "baby blue",
+      "white",
+      "light",
+      "colorful",
+      "cool",
+      "vibrant"
+    ],
+    "toneKeywords": [
+      "playful",
+      "fun",
+      "friendly",
+      "casual",
+      "simple",
+      "clean",
+      "soft",
+      "modern",
+      "young",
+      "fresh",
+      "creative"
+    ]
+  },
+  {
+    "id": "creme",
+    "name": "Creme",
+    "type": "standard",
+    "colorKeywords": [
+      "cream",
+      "creme",
+      "beige",
+      "earthy",
+      "neutral",
+      "warm",
+      "light",
+      "tan",
+      "sand",
+      "camel",
+      "brown",
+      "ecru",
+      "light beige"
+    ],
+    "toneKeywords": [
+      "feminine",
+      "serious",
+      "classy",
+      "corporate",
+      "formal",
+      "elegant",
+      "professional",
+      "simple",
+      "minimalist",
+      "clean",
+      "subtle",
+      "quiet",
+      "soft",
+      "luxury",
+      "deluxe",
+      "expensive",
+      "modern",
+      "classic",
+      "traditional",
+      "mature",
+      "aesthetic",
+      "organic"
+    ]
+  },
+  {
+    "id": "daktilo",
+    "name": "Daktilo",
+    "type": "standard",
+    "colorKeywords": [
+      "light",
+      "cream",
+      "beige",
+      "peach",
+      "white",
+      "neutral",
+      "warm"
+    ],
+    "toneKeywords": [
+      "typewriter",
+      "edgy"
+    ]
+  },
+  {
+    "id": "dawn",
+    "name": "Dawn",
+    "type": "standard",
+    "colorKeywords": [
+      "Dark",
+      "slate",
+      "gray",
+      "black",
+      "peach",
+      "gradient",
+      "pink",
+      "purple"
+    ],
+    "toneKeywords": [
+      "Simple",
+      "modern",
+      "minimalist",
+      "clean"
+    ]
+  },
+  {
+    "id": "daydream",
+    "name": "Daydream",
+    "type": "standard",
+    "colorKeywords": [
+      "light",
+      "white",
+      "light-gray",
+      "gradient",
+      "glassy",
+      "purple",
+      "blue",
+      "violet",
+      "pink",
+      "vibrant",
+      "colorful",
+      "cool"
+    ],
+    "toneKeywords": [
+      "playful",
+      "friendly",
+      "soft",
+      "bold",
+      "modern",
+      "high tech",
+      "young",
+      "fresh",
+      "creative",
+      "fun"
+    ]
+  },
+  {
+    "id": "dialogue",
+    "name": "Dialogue",
+    "type": "standard",
+    "colorKeywords": [
+      "light",
+      "orange",
+      "white",
+      "warm"
+    ],
+    "toneKeywords": [
+      "bright",
+      "light",
+      "airy",
+      "modern",
+      "serif",
+      "writing",
+      "simple",
+      "white",
+      "professional"
+    ]
+  },
+  {
+    "id": "dune",
+    "name": "Dune",
+    "type": "standard",
+    "colorKeywords": [
+      "light",
+      "beige",
+      "white",
+      "cream",
+      "gold",
+      "earthy",
+      "warm",
+      "sandy"
+    ],
+    "toneKeywords": [
+      "feminine",
+      "serious",
+      "classy",
+      "elegant",
+      "professional",
+      "simple",
+      "minimalist",
+      "clean",
+      "luxury",
+      "deluxe",
+      "classic",
+      "vintage",
+      "mature"
+    ]
+  },
+  {
+    "id": "editoria",
+    "name": "Editoria",
+    "type": "standard",
+    "colorKeywords": [
+      "graphite black",
+      "deep charcoal",
+      "muted black",
+      "soot gray",
+      "stone black",
+      "warm gray",
+      "pebble gray",
+      "driftwood gray",
+      "soft taupe",
+      "sand mist",
+      "beige gray",
+      "off-white",
+      "pale cream",
+      "cloud white",
+      "eggshell",
+      "parchment beige"
+    ],
+    "toneKeywords": [
+      "neutral",
+      "classy",
+      "elegant",
+      "professional",
+      "simple",
+      "minimalist",
+      "clean",
+      "subtle",
+      "quiet",
+      "soft",
+      "modern",
+      "traditional",
+      "fresh",
+      "mature",
+      "inspirational",
+      "creative",
+      "organic"
+    ]
+  },
+  {
+    "id": "electric",
+    "name": "Electric",
+    "type": "standard",
+    "colorKeywords": [
+      "dark",
+      "gradient",
+      "vibrant",
+      "colorful",
+      "orange",
+      "pink",
+      "purple",
+      "blue",
+      "contrast",
+      "pastel",
+      "salmon"
+    ],
+    "toneKeywords": [
+      "professional",
+      "playful",
+      "friendly",
+      "clean",
+      "bold",
+      "modern",
+      "high tech",
+      "futuristic",
+      "fresh",
+      "inspirational",
+      "creative",
+      "aesthetic",
+      "fun"
+    ]
+  },
+  {
+    "id": "elysia",
+    "name": "Elysia",
+    "type": "standard",
+    "colorKeywords": [
+      "light",
+      "blue",
+      "pink",
+      "purple",
+      "pastel",
+      "gradient",
+      "vibrant",
+      "colorful",
+      "turquoise",
+      "violet",
+      "lilac"
+    ],
+    "toneKeywords": [
+      "playful",
+      "friendly",
+      "bold",
+      "high tech",
+      "futuristic",
+      "modern",
+      "fresh",
+      "young",
+      "aesthetic",
+      "creative",
+      "inspirational",
+      "fun"
+    ]
+  },
+  {
+    "id": "finesse",
+    "name": "Finesse",
+    "type": "standard",
+    "colorKeywords": [
+      "light",
+      "beige",
+      "olive",
+      "green",
+      "earthy",
+      "neutral",
+      "warm"
+    ],
+    "toneKeywords": [
+      "feminine",
+      "classy",
+      "elegant",
+      "professional",
+      "simple",
+      "minimalist",
+      "clean",
+      "soft",
+      "deluxe",
+      "expensive",
+      "classic",
+      "vintage",
+      "aesthetic",
+      "floral",
+      "organic"
+    ]
+  },
+  {
+    "id": "ag4mc9ggtxi8iyi",
+    "name": "Flamingo",
+    "type": "standard",
+    "colorKeywords": [
+      "light",
+      "pink",
+      "coral",
+      "orange",
+      "pastel",
+      "salmon",
+      "gradient",
+      "colorful",
+      "warm",
+      "pastel",
+      "vibrant",
+      "blush"
+    ],
+    "toneKeywords": [
+      "feminine",
+      "playful",
+      "friendly",
+      "thin",
+      "modern",
+      "high tech",
+      "young",
+      "fresh",
+      "organic",
+      "creative",
+      "aesthetic",
+      "inspirational",
+      "fun"
+    ]
+  },
+  {
+    "id": "flax",
+    "name": "Flax",
+    "type": "standard",
+    "colorKeywords": [
+      "almond",
+      "tan",
+      "light",
+      "brown",
+      "soft",
+      "beige",
+      "neutral"
+    ],
+    "toneKeywords": [
+      "soft",
+      "modern",
+      "clean",
+      "minimalist",
+      "interior design",
+      "brown",
+      "earthy",
+      "professional"
+    ]
+  },
+  {
+    "id": "fluo",
+    "name": "Fluo",
+    "type": "standard",
+    "colorKeywords": [
+      "lime green",
+      "dark",
+      "black",
+      "dark gray",
+      "neon green",
+      "vibrant green",
+      "yellow green",
+      "neon yellow",
+      "citrus green"
+    ],
+    "toneKeywords": [
+      "Playful",
+      "friendly",
+      "fun",
+      "simple",
+      "clean",
+      "minimalist",
+      "bold",
+      "loud",
+      "modern",
+      "high tech",
+      "futuristic",
+      "young",
+      "fresh",
+      "vibrant"
+    ]
+  },
+  {
+    "id": "founder",
+    "name": "Founder",
+    "type": "standard",
+    "colorKeywords": [
+      "dark",
+      "black",
+      "gray",
+      "blue",
+      "cool",
+      "purple"
+    ],
+    "toneKeywords": [
+      "serious",
+      "modern",
+      "professional",
+      "minimalist"
+    ]
+  },
+  {
+    "id": "gamma",
+    "name": "Gamma",
+    "type": "standard",
+    "colorKeywords": [
+      "light",
+      "white",
+      "orange",
+      "salmon",
+      "peach",
+      "pink",
+      "purple",
+      "gradient",
+      "pastel",
+      "vibrant",
+      "colorful",
+      "warm"
+    ],
+    "toneKeywords": [
+      "playful",
+      "friendly",
+      "clean",
+      "bold",
+      "loud",
+      "modern",
+      "fresh",
+      "young",
+      "inspirational",
+      "creative",
+      "aesthetic",
+      "fun"
+    ]
+  },
+  {
+    "id": "gamma-dark",
+    "name": "Gamma Dark",
+    "type": "standard",
+    "colorKeywords": [
+      "dark purple",
+      "purple",
+      "salmon pink",
+      "apricot orange",
+      "gradient",
+      "colorful",
+      "vibrant",
+      "dark",
+      "contrast",
+      "warm"
+    ],
+    "toneKeywords": [
+      "Playful",
+      "friendly",
+      "clean",
+      "bold",
+      "loud",
+      "modern",
+      "fresh",
+      "young",
+      "inspirational",
+      "creative",
+      "aesthetic",
+      "fun",
+      "futuristic"
+    ]
+  },
+  {
+    "id": "gleam",
+    "name": "Gleam",
+    "type": "standard",
+    "colorKeywords": [
+      "cool gray",
+      "silver",
+      "pearl gray",
+      "slate gray",
+      "charcoal gray",
+      "white",
+      "black",
+      "gray",
+      "light",
+      "b&w"
+    ],
+    "toneKeywords": [
+      "Serious",
+      "classy",
+      "professional",
+      "corporate",
+      "tech",
+      "minimalist",
+      "simple",
+      "clean",
+      "subtle",
+      "soft",
+      "modern",
+      "tech"
+    ]
+  },
+  {
+    "id": "gold-leaf",
+    "name": "Gold Leaf",
+    "type": "standard",
+    "colorKeywords": [
+      "gold",
+      "champagne",
+      "ivory",
+      "white",
+      "cream",
+      "light beige",
+      "soft metallic",
+      "luxurious gold",
+      "warm tones",
+      "elegant",
+      "shimmering",
+      "polished",
+      "clean"
+    ],
+    "toneKeywords": [
+      "Classy",
+      "Formal",
+      "Elegant",
+      "Professional",
+      "Minimalist",
+      "Clean",
+      "Subtle",
+      "Soft",
+      "Luxury",
+      "Deluxe",
+      "Expensive",
+      "Modern",
+      "Mature",
+      "Inspirational",
+      "Aesthetic",
+      "Organic"
+    ]
+  },
+  {
+    "id": "howlite",
+    "name": "Howlite",
+    "type": "standard",
+    "colorKeywords": [
+      "white",
+      "black",
+      "light",
+      "contrast",
+      "b&w"
+    ],
+    "toneKeywords": [
+      "serious",
+      "classy",
+      "corporate",
+      "formal",
+      "elegant",
+      "professional",
+      "simple",
+      "minimalist",
+      "clean",
+      "bold",
+      "luxury",
+      "modern",
+      "high tech",
+      "mature",
+      "fresh",
+      "organic"
+    ]
+  },
+  {
+    "id": "icebreaker",
+    "name": "Icebreaker",
+    "type": "standard",
+    "colorKeywords": [
+      "light",
+      "blue",
+      "white",
+      "navy",
+      "gradient",
+      "cool"
+    ],
+    "toneKeywords": [
+      "serious",
+      "professional",
+      "friendly",
+      "casual",
+      "clean",
+      "simple",
+      "soft",
+      "modern",
+      "fresh"
+    ]
+  },
+  {
+    "id": "incandescent",
+    "name": "Incandescent",
+    "type": "standard",
+    "colorKeywords": [
+      "dark",
+      "neon",
+      "pink",
+      "purple",
+      "salmon",
+      "vibrant",
+      "neon pink",
+      "black",
+      "gradient",
+      "colorful",
+      "cool"
+    ],
+    "toneKeywords": [
+      "playful",
+      "friendly",
+      "bold",
+      "loud",
+      "modern",
+      "high tech",
+      "futuristic",
+      "fresh",
+      "creative",
+      "fun"
+    ]
+  },
+  {
+    "id": "urqsghgfv9ay2j0",
+    "name": "Indigo",
+    "type": "standard",
+    "colorKeywords": [
+      "dark",
+      "purple",
+      "blue",
+      "navy",
+      "violet",
+      "lavender",
+      "vibrant",
+      "colorful",
+      "cool"
+    ],
+    "toneKeywords": [
+      "bold",
+      "playful",
+      "loud",
+      "luxury",
+      "modern",
+      "high tech",
+      "futuristic",
+      "fresh",
+      "aesthetic",
+      "creative",
+      "inspirational"
+    ]
+  },
+  {
+    "id": "iris",
+    "name": "Iris",
+    "type": "standard",
+    "colorKeywords": [
+      "purple",
+      "lavender"
+    ],
+    "toneKeywords": [
+      "modern",
+      "soft",
+      "inviting"
+    ]
+  },
+  {
+    "id": "keepsake",
+    "name": "Keepsake",
+    "type": "standard",
+    "colorKeywords": [
+      "powder blue",
+      "vintage blue",
+      "ecru",
+      "soft blue",
+      "earthy",
+      "pastel",
+      "light",
+      "creme",
+      "beige",
+      "warm",
+      "gradient"
+    ],
+    "toneKeywords": [
+      "feminine",
+      "serious",
+      "professional",
+      "simple",
+      "minimalist",
+      "clean",
+      "soft",
+      "subtle",
+      "vintage",
+      "classic"
+    ]
+  },
+  {
+    "id": "kraft",
+    "name": "Kraft ",
+    "type": "standard",
+    "colorKeywords": [
+      "beige",
+      "neutral",
+      "grayish beige",
+      "light",
+      "earthy",
+      "neutral",
+      "warm",
+      "parchment",
+      "stone",
+      "champagne",
+      "ecru"
+    ],
+    "toneKeywords": [
+      "serious",
+      "classy",
+      "corporate",
+      "formal",
+      "elegant",
+      "professional",
+      "simple",
+      "minimalist",
+      "clean",
+      "subtle",
+      "quiet",
+      "soft",
+      "luxury",
+      "deluxe",
+      "expensive",
+      "classic",
+      "traditional",
+      "mature",
+      "aesthetic",
+      "organic",
+      "feminine"
+    ]
+  },
+  {
+    "id": "lavender",
+    "name": "Lavender",
+    "type": "standard",
+    "colorKeywords": [
+      "light purple",
+      "light lavender",
+      "pastel purple",
+      "lavender",
+      "purple",
+      "white",
+      "light",
+      "pastel",
+      "colorful",
+      "cool"
+    ],
+    "toneKeywords": [
+      "Feminine",
+      "elegant",
+      "professional",
+      "playful",
+      "friendly",
+      "simple",
+      "minimalistic",
+      "clean",
+      "soft",
+      "subtle",
+      "modern",
+      "young",
+      "fresh",
+      "aesthetic"
+    ]
+  },
+  {
+    "id": "leimoon",
+    "name": "Leimoon",
+    "type": "standard",
+    "colorKeywords": [
+      "coral orange",
+      "tangerine",
+      "pink orange",
+      "apricot orange",
+      "light peach",
+      "soft blush pink"
+    ],
+    "toneKeywords": [
+      "playful",
+      "friendly",
+      "casual",
+      "fun",
+      "minimalist",
+      "clean",
+      "soft",
+      "fresh",
+      "modern",
+      "young",
+      "inspirational",
+      "creative",
+      "aesthetic",
+      "organic"
+    ]
+  },
+  {
+    "id": "linen",
+    "name": "Linen",
+    "type": "standard",
+    "colorKeywords": [
+      "cream",
+      "creme",
+      "beige",
+      "earthy",
+      "neutral",
+      "warm",
+      "light",
+      "tan",
+      "sand",
+      "camel",
+      "brown",
+      "ecru",
+      "light beige"
+    ],
+    "toneKeywords": [
+      "feminine",
+      "serious",
+      "classy",
+      "corporate",
+      "formal",
+      "elegant",
+      "professional",
+      "simple",
+      "minimalist",
+      "clean",
+      "subtle",
+      "quiet",
+      "soft",
+      "luxury",
+      "deluxe",
+      "expensive",
+      "modern",
+      "classic",
+      "traditional",
+      "mature",
+      "aesthetic",
+      "organic"
+    ]
+  },
+  {
+    "id": "gzr8vcrxmsi0o7v",
+    "name": "Lotus Group Capital",
+    "type": "custom"
+  },
+  {
+    "id": "lunaria",
+    "name": "Lunaria",
+    "type": "standard",
+    "colorKeywords": [
+      "gradient",
+      "dark",
+      "navy",
+      "periwinkle blue",
+      "blue",
+      "indigo",
+      "lilac",
+      "purple blue",
+      "light purple",
+      "black"
+    ],
+    "toneKeywords": [
+      "playful",
+      "friendly",
+      "simple",
+      "clean",
+      "bold",
+      "modern",
+      "high tech",
+      "futuristic",
+      "young",
+      "fresh",
+      "creative"
+    ]
+  },
+  {
+    "id": "lux",
+    "name": "Lux",
+    "type": "standard",
+    "colorKeywords": [
+      "Green",
+      "dark green",
+      "forest green",
+      "deep green",
+      "salmon",
+      "peach",
+      "dark",
+      "colorful"
+    ],
+    "toneKeywords": [
+      "feminine",
+      "serious",
+      "classy",
+      "corporate",
+      "formal",
+      "elegant",
+      "professional",
+      "friendly",
+      "simple",
+      "minimalist",
+      "clean",
+      "luxury",
+      "deluxe",
+      "expensive",
+      "modern",
+      "traditional",
+      "mature"
+    ]
+  },
+  {
+    "id": "malibu",
+    "name": "Malibu",
+    "type": "standard",
+    "colorKeywords": [
+      "pink",
+      "light pink",
+      "fuchsia",
+      "magenta",
+      "dreamy",
+      "vibrant",
+      "soft",
+      "cool"
+    ],
+    "toneKeywords": [
+      "Feminine",
+      "fun",
+      "Loud",
+      "Modern",
+      "Young",
+      "Creative",
+      "Organic"
+    ]
+  },
+  {
+    "id": "marine",
+    "name": "Marine",
+    "type": "standard",
+    "colorKeywords": [
+      "dark",
+      "blue",
+      "navy",
+      "white",
+      "cool",
+      "royal blue",
+      "dark blue"
+    ],
+    "toneKeywords": [
+      "professional",
+      "bold",
+      "loud",
+      "classic",
+      "fresh",
+      "inspirational",
+      "organic",
+      "friendly",
+      "bold"
+    ]
+  },
+  {
+    "id": "mercury",
+    "name": "Mercury",
+    "type": "standard",
+    "colorKeywords": [
+      "silver",
+      "lavender",
+      "pearl",
+      "gradient",
+      "transparent",
+      "crystal",
+      "holographic",
+      "cool",
+      "sleek",
+      "neutral",
+      "misty",
+      "Cool gray",
+      "silver",
+      "metallic lavender",
+      "icy blue",
+      "pearl white",
+      "soft violet"
+    ],
+    "toneKeywords": [
+      "Modern",
+      "futuristic",
+      "calm",
+      "minimal",
+      "balanced",
+      "refreshing",
+      "professional",
+      "innovative",
+      "stylish",
+      "clear"
+    ]
+  },
+  {
+    "id": "i7l36r5v07hyz20",
+    "name": "Mocha",
+    "type": "standard",
+    "colorKeywords": [
+      "dark",
+      "beige",
+      "taupe",
+      "gold",
+      "brown",
+      "cream",
+      "gray",
+      "coffee",
+      "earthy",
+      "neutral",
+      "dark",
+      "warm"
+    ],
+    "toneKeywords": [
+      "serious",
+      "classy",
+      "elegant",
+      "simple",
+      "clean",
+      "soft",
+      "luxury",
+      "deluxe",
+      "classic",
+      "aesthetic",
+      "plants"
+    ]
+  },
+  {
+    "id": "moss-and-mist",
+    "name": "Moss & Mist",
+    "type": "standard",
+    "colorKeywords": [
+      "Black",
+      "olive",
+      "green",
+      "dark",
+      "earthy",
+      "warm",
+      "laurel green",
+      "sage green"
+    ],
+    "toneKeywords": [
+      "serious",
+      "classy",
+      "formal",
+      "elegant",
+      "professional",
+      "soft",
+      "modern",
+      "young"
+    ]
+  },
+  {
+    "id": "mystique",
+    "name": "Mystique ",
+    "type": "standard",
+    "colorKeywords": [
+      "Pink",
+      "fuchsia",
+      "dark pink",
+      "deep pink",
+      "dark",
+      "vibrant",
+      "contrast",
+      "black",
+      "dark gray"
+    ],
+    "toneKeywords": [
+      "feminine",
+      "playful",
+      "simple",
+      "clean",
+      "bold",
+      "loud",
+      "futuristic",
+      "high tech",
+      "fresh",
+      "young",
+      "fresh",
+      "modern"
+    ]
+  },
+  {
+    "id": "nebulae",
+    "name": "Nebulae",
+    "type": "standard",
+    "colorKeywords": [
+      "dark",
+      "black",
+      "gradient",
+      "blue",
+      "purple",
+      "navy blue",
+      "royal blue",
+      "aurora borealis",
+      "vibrant",
+      "colorful",
+      "contrast"
+    ],
+    "toneKeywords": [
+      "Friendly",
+      "playful",
+      "bold",
+      "loud",
+      "modern",
+      "high tech",
+      "futuristic",
+      "fresh",
+      "creative"
+    ]
+  },
+  {
+    "id": "nightsky",
+    "name": "Night Sky",
+    "type": "standard",
+    "colorKeywords": [
+      "gradient",
+      "dark",
+      "navy",
+      "periwinkle blue",
+      "blue",
+      "indigo",
+      "lilac",
+      "purple blue",
+      "light purple",
+      "black"
+    ],
+    "toneKeywords": [
+      "elegant",
+      "professional",
+      "playful",
+      "friendly",
+      "simple",
+      "minimalist",
+      "clean",
+      "bold",
+      "luxury",
+      "modern",
+      "high tech",
+      "futuristic",
+      "young",
+      "fresh",
+      "creative"
+    ]
+  },
+  {
+    "id": "nova",
+    "name": "Nova",
+    "type": "standard",
+    "colorKeywords": [
+      "prism",
+      "blue",
+      "lilac",
+      "lavender",
+      "indigo",
+      "aqua",
+      "pastel",
+      "gradient",
+      "holographic",
+      "iridescent",
+      "luminous",
+      "radiant",
+      "vibrant",
+      "Electric blue",
+      "sky blue",
+      "periwinkle",
+      "lavender",
+      "pale cyan",
+      "cool white"
+    ],
+    "toneKeywords": [
+      "Futuristic",
+      "dynamic",
+      "modern",
+      "inspiring",
+      "sleek",
+      "creative",
+      "bold",
+      "refreshing",
+      "innovative",
+      "energetic",
+      "Fresh",
+      "modern",
+      "energetic",
+      "polished",
+      "cool"
+    ]
+  },
+  {
+    "id": "6igdxf9bbdbuozo",
+    "name": "Oasis",
+    "type": "standard",
+    "colorKeywords": [
+      "light",
+      "orange",
+      "green",
+      "gray-green",
+      "beige",
+      "cream",
+      "warm",
+      "neutral",
+      "earthy"
+    ],
+    "toneKeywords": [
+      "retro",
+      "vintage",
+      "organic",
+      "simple",
+      "clean",
+      "classic"
+    ]
+  },
+  {
+    "id": "oatmeal",
+    "name": "Oatmeal",
+    "type": "standard",
+    "colorKeywords": [
+      "light",
+      "cream",
+      "beige",
+      "earthy",
+      "white",
+      "b&w",
+      "neutral",
+      "warm"
+    ],
+    "toneKeywords": [
+      "feminine",
+      "serious",
+      "classy",
+      "elegant",
+      "professional",
+      "simple",
+      "minimalist",
+      "clean",
+      "quiet",
+      "subtle",
+      "soft",
+      "luxury",
+      "classic",
+      "traditional",
+      "vintage",
+      "organic",
+      "mature",
+      "thin"
+    ]
+  },
+  {
+    "id": "onyx",
+    "name": "Onyx",
+    "type": "standard",
+    "colorKeywords": [
+      "black",
+      "white",
+      "dark",
+      "contrast",
+      "b&w"
+    ],
+    "toneKeywords": [
+      "serious",
+      "classy",
+      "corporate",
+      "formal",
+      "elegant",
+      "professional",
+      "simple",
+      "minimalist",
+      "clean",
+      "bold",
+      "luxury",
+      "modern",
+      "high tech",
+      "mature",
+      "fresh",
+      "organic"
+    ]
+  },
+  {
+    "id": "orbit",
+    "name": "Orbit",
+    "type": "standard",
+    "colorKeywords": [
+      "dark",
+      "navy",
+      "blue",
+      "yellow",
+      "orange",
+      "green",
+      "multicolor",
+      "colorful",
+      "vibrant",
+      "contrast",
+      "gradient"
+    ],
+    "toneKeywords": [
+      "playful",
+      "friendly",
+      "casual",
+      "bold",
+      "loud",
+      "modern",
+      "fresh",
+      "young",
+      "creative",
+      "fun"
+    ]
+  },
+  {
+    "id": "peach",
+    "name": "Peach",
+    "type": "standard",
+    "colorKeywords": [
+      "light",
+      "peach",
+      "salmon",
+      "orange",
+      "coral",
+      "yellow",
+      "pastel",
+      "gradient",
+      "vibrant",
+      "colorful",
+      "warm"
+    ],
+    "toneKeywords": [
+      "Playful",
+      "friendly",
+      "casual",
+      "fun",
+      "loud",
+      "bold",
+      "young",
+      "fresh",
+      "creative",
+      "spring",
+      "summer"
+    ]
+  },
+  {
+    "id": "pearl",
+    "name": "Pearl",
+    "type": "standard",
+    "colorKeywords": [
+      "light",
+      "white",
+      "black",
+      "b&w",
+      "cool",
+      "contrast",
+      "gray",
+      "light-gray"
+    ],
+    "toneKeywords": [
+      "serious",
+      "classy",
+      "corporate",
+      "formal",
+      "elegant",
+      "professional",
+      "simple",
+      "minimalist",
+      "clean",
+      "soft",
+      "modern",
+      "high tech",
+      "fresh",
+      "thin"
+    ]
+  },
+  {
+    "id": "petrol",
+    "name": "Petrol",
+    "type": "standard",
+    "colorKeywords": [
+      "light",
+      "petrol blue",
+      "denim blue",
+      "grayish blue",
+      "ecru",
+      "off-white",
+      "blue"
+    ],
+    "toneKeywords": [
+      "Professional",
+      "formal",
+      "corporate",
+      "quiet",
+      "classic",
+      "traditional",
+      "playful",
+      "geometric",
+      "serious"
+    ]
+  },
+  {
+    "id": "piano",
+    "name": "Piano",
+    "type": "standard",
+    "colorKeywords": [
+      "light",
+      "black",
+      "white",
+      "b&w",
+      "contrast"
+    ],
+    "toneKeywords": [
+      "classy",
+      "formal",
+      "minimalist",
+      "clean",
+      "loud",
+      "bold",
+      "luxury",
+      "classic",
+      "geometric"
+    ]
+  },
+  {
+    "id": "pistachio",
+    "name": "Pistachio",
+    "type": "standard",
+    "colorKeywords": [
+      "light",
+      "green",
+      "white",
+      "cool"
+    ],
+    "toneKeywords": [
+      "friendly",
+      "playful",
+      "elegant",
+      "clean",
+      "modern",
+      "fresh",
+      "inspirational"
+    ]
+  },
+  {
+    "id": "plant-shop",
+    "name": "Plant Shop",
+    "type": "standard",
+    "colorKeywords": [
+      "light",
+      "green",
+      "white",
+      "earthy",
+      "tan",
+      "yellow"
+    ],
+    "toneKeywords": [
+      "playful",
+      "nature",
+      "feminine",
+      "beautiful",
+      "earthy",
+      "neutral",
+      "simple",
+      "modern"
+    ]
+  },
+  {
+    "id": "prism",
+    "name": "Prism",
+    "type": "standard",
+    "colorKeywords": [
+      "light",
+      "blue",
+      "pink",
+      "purple",
+      "pastel",
+      "gradient",
+      "vibrant",
+      "colorful",
+      "turquoise",
+      "violet",
+      "lilac"
+    ],
+    "toneKeywords": [
+      "playful",
+      "friendly",
+      "bold",
+      "high tech",
+      "futuristic",
+      "modern",
+      "fresh",
+      "young",
+      "aesthetic",
+      "creative",
+      "inspirational",
+      "fun"
+    ]
+  },
+  {
+    "id": "rush",
+    "name": "Rush",
+    "type": "standard",
+    "colorKeywords": [
+      "red",
+      "scarlet",
+      "vermillion",
+      "white",
+      "light",
+      "contrast",
+      "vibrant"
+    ],
+    "toneKeywords": [
+      "professional",
+      "bold",
+      "loud",
+      "high tech",
+      "modern",
+      "fresh",
+      "grotesque",
+      "strong"
+    ]
+  },
+  {
+    "id": "sage",
+    "name": "Sage",
+    "type": "standard",
+    "colorKeywords": [
+      "light",
+      "beige",
+      "white",
+      "green",
+      "sage",
+      "forest green",
+      "pastel green",
+      "pastel",
+      "cool"
+    ],
+    "toneKeywords": [
+      "serious",
+      "corporate",
+      "formal",
+      "professional",
+      "friendly",
+      "minimalist",
+      "clean",
+      "simple",
+      "soft",
+      "modern",
+      "classic",
+      "fresh"
+    ]
+  },
+  {
+    "id": "sanguine",
+    "name": "Sanguine",
+    "type": "standard",
+    "colorKeywords": [
+      "red",
+      "scarlet",
+      "vermillion",
+      "black",
+      "dark",
+      "wine",
+      "warm"
+    ],
+    "toneKeywords": [
+      "Bold",
+      "loud",
+      "unique",
+      "creative",
+      "opinionated",
+      "moody",
+      "gothic",
+      "mysterious",
+      "gloomy",
+      "deep",
+      "strong",
+      "punk"
+    ]
+  },
+  {
+    "id": "seafoam",
+    "name": "Seafoam",
+    "type": "standard",
+    "colorKeywords": [
+      "light",
+      "teal",
+      "aqua",
+      "pastel",
+      "blue-green",
+      "white",
+      "colorful",
+      "cool"
+    ],
+    "toneKeywords": [
+      "Playful",
+      "friendly",
+      "casual",
+      "fun",
+      "clean",
+      "soft",
+      "bold",
+      "modern",
+      "young",
+      "fresh"
+    ]
+  },
+  {
+    "id": "serene",
+    "name": "Serene",
+    "type": "standard",
+    "colorKeywords": [
+      "light",
+      "light blue",
+      "sky blue",
+      "baby blue",
+      "pastel blue",
+      "calm blue",
+      "cool",
+      "pastel"
+    ],
+    "toneKeywords": [
+      "Friendly",
+      "casual",
+      "fun",
+      "clean",
+      "soft",
+      "modern",
+      "young",
+      "fresh",
+      "professional",
+      "simple",
+      "minimalistic",
+      "subtle",
+      "peaceful",
+      "peace"
+    ]
+  },
+  {
+    "id": "shadow",
+    "name": "Shadow",
+    "type": "standard",
+    "colorKeywords": [
+      "b&w",
+      "black",
+      "gray",
+      "white",
+      "silver"
+    ],
+    "toneKeywords": [
+      "masculine",
+      "luxury",
+      "deluxe",
+      "simple",
+      "minimalist",
+      "clean",
+      "sans serif"
+    ]
+  },
+  {
+    "id": "ldt9b66ardx3odd",
+    "name": "SixOne",
+    "type": "custom"
+  },
+  {
+    "id": "slate",
+    "name": "Slate",
+    "type": "standard",
+    "colorKeywords": [
+      "slate",
+      "gray",
+      "dark",
+      "high contrast",
+      "grayscale"
+    ],
+    "toneKeywords": [
+      "Serious",
+      "business",
+      "corporate",
+      "formal",
+      "professional",
+      "simple",
+      "subtle",
+      "bold",
+      "modern",
+      "geometric"
+    ]
+  },
+  {
+    "id": "snowball",
+    "name": "Snowball",
+    "type": "standard",
+    "colorKeywords": [
+      "light",
+      "blue",
+      "white",
+      "pastel",
+      "cool"
+    ],
+    "toneKeywords": [
+      "friendly",
+      "playful",
+      "elegant",
+      "clean",
+      "modern",
+      "fresh",
+      "inspirational"
+    ]
+  },
+  {
+    "id": "spectrum",
+    "name": "Spectrum",
+    "type": "standard",
+    "colorKeywords": [
+      "Pastel Purple",
+      "Soft Pink",
+      "Sky Blue",
+      "Aqua",
+      "Mint Green",
+      "Peach",
+      "light lavender",
+      "Pastel",
+      "Iridescent",
+      "Soft",
+      "Dreamy",
+      "Holographic",
+      "Translucent",
+      "Glossy",
+      "Ethereal"
+    ],
+    "toneKeywords": [
+      "Playful",
+      "vibrant",
+      "imaginative",
+      "inclusive",
+      "futuristic",
+      "dreamy",
+      "radiant"
+    ]
+  },
+  {
+    "id": "sprout",
+    "name": "Sprout",
+    "type": "standard",
+    "colorKeywords": [
+      "green",
+      "yellow green",
+      "mint green",
+      "leafy green",
+      "mint cream",
+      "icy mint",
+      "soft pastel green"
+    ],
+    "toneKeywords": [
+      "organic",
+      "earthy",
+      "fresh",
+      "natural",
+      "calming",
+      "clean",
+      "minimalist",
+      "subtle",
+      "grounded",
+      "modern",
+      "professional",
+      "mature",
+      "healthy",
+      "eco-friendly",
+      "soft",
+      "friendly",
+      "green-forward",
+      "botanical",
+      "calm luxury"
+    ]
+  },
+  {
+    "id": "stardust",
+    "name": "Stardust",
+    "type": "standard",
+    "colorKeywords": [
+      "orange",
+      "black",
+      "red",
+      "dark"
+    ],
+    "toneKeywords": [
+      "futuristic",
+      "space",
+      "modern"
+    ]
+  },
+  {
+    "id": "stratos",
+    "name": "Stratos",
+    "type": "standard",
+    "colorKeywords": [
+      "Deep Navy",
+      "Midnight Blue",
+      "Indigo",
+      "Royal Blue",
+      "Black",
+      "dark gradient"
+    ],
+    "toneKeywords": [
+      "Cool",
+      "Futuristic",
+      "Bold",
+      "dramatic",
+      "dark",
+      "high contrast",
+      "tech",
+      "immersive",
+      "sharp",
+      "cosmic"
+    ]
+  },
+  {
+    "id": "terracotta",
+    "name": "Terracotta",
+    "type": "standard",
+    "colorKeywords": [
+      "beige",
+      "brown",
+      "blush",
+      "earthy",
+      "neutral",
+      "light",
+      "warm",
+      "white",
+      "cream"
+    ],
+    "toneKeywords": [
+      "feminine",
+      "formal",
+      "professional",
+      "casual",
+      "friendly",
+      "clean",
+      "simple",
+      "soft",
+      "quiet",
+      "classic",
+      "vintage",
+      "aesthetic",
+      "floral",
+      "plants",
+      "organic"
+    ]
+  },
+  {
+    "id": "tranquil",
+    "name": "Tranquil",
+    "type": "standard",
+    "colorKeywords": [
+      "light",
+      "blue",
+      "sky",
+      "white",
+      "glassy",
+      "cool"
+    ],
+    "toneKeywords": [
+      "serious",
+      "corporate",
+      "professional",
+      "subtle",
+      "quiet"
+    ]
+  },
+  {
+    "id": "twilight",
+    "name": "Twilight",
+    "type": "standard",
+    "colorKeywords": [
+      "Dusty rose",
+      "mauve",
+      "cloud gray",
+      "ivory",
+      "lavender",
+      "pale plum",
+      "muted burgundy",
+      "lilac",
+      "pearl",
+      "pastel blue",
+      "sky",
+      "violet",
+      "cloud white",
+      "soft beige",
+      "gradient",
+      "crystal",
+      "stardust",
+      "holographic",
+      "iridescent",
+      "airy",
+      "luminous"
+    ],
+    "toneKeywords": [
+      "Dreamy",
+      "calming",
+      "ethereal",
+      "modern",
+      "uplifting",
+      "balanced",
+      "serene",
+      "inspiring",
+      "imaginative",
+      "refreshing",
+      "soft",
+      "calm",
+      "nostalgic",
+      "gentle",
+      "elegant",
+      "pastel"
+    ]
+  },
+  {
+    "id": "fkfiyoio0fnekuu",
+    "name": "Untitled theme",
+    "type": "custom",
+    "colorKeywords": [
+      "dark blue",
+      "royal blue",
+      "indigo",
+      "navy blue",
+      "white",
+      "dark",
+      "cool"
+    ],
+    "toneKeywords": [
+      "classy",
+      "complex",
+      "bold",
+      "loud",
+      "professional",
+      "luxury",
+      "deluxe",
+      "expensive",
+      "modern",
+      "fresh",
+      "aesthetic",
+      "creative",
+      "organic",
+      "night",
+      "fluid",
+      "starry"
+    ]
+  },
+  {
+    "id": "vanilla",
+    "name": "Vanilla",
+    "type": "standard",
+    "colorKeywords": [
+      "yellow",
+      "light yellow",
+      "pastel yellow",
+      "pale",
+      "green",
+      "dark green",
+      "forest green",
+      "deep green",
+      "honey",
+      "light",
+      "white",
+      "warm",
+      "contrast",
+      "earthy"
+    ],
+    "toneKeywords": [
+      "Professional",
+      "playful",
+      "friendly",
+      "casual",
+      "fun",
+      "minimalist",
+      "simple",
+      "clean",
+      "subtle",
+      "soft",
+      "classic",
+      "young",
+      "fresh"
+    ]
+  },
+  {
+    "id": "velvet-tides",
+    "name": "Velvet Tides",
+    "type": "standard",
+    "colorKeywords": [
+      "dark",
+      "black",
+      "purple",
+      "cool",
+      "gradient",
+      "lavender"
+    ],
+    "toneKeywords": [
+      "elegant",
+      "fancy",
+      "bold",
+      "loud",
+      "deluxe",
+      "expensive",
+      "high tech",
+      "modern",
+      "futuristic",
+      "aesthetic"
+    ]
+  },
+  {
+    "id": "verdigris",
+    "name": "Verdigris",
+    "type": "standard",
+    "colorKeywords": [
+      "green",
+      "blue",
+      "teal",
+      "dark",
+      "dark blue",
+      "navy",
+      "dark green",
+      "seafoam green",
+      "verdigris green",
+      "blue green",
+      "vibrant",
+      "colorful",
+      "gradient",
+      "cool"
+    ],
+    "toneKeywords": [
+      "playful",
+      "friendly",
+      "casual",
+      "fun",
+      "complex",
+      "bold",
+      "loud",
+      "modern",
+      "young",
+      "fresh",
+      "creative",
+      "organic"
+    ]
+  },
+  {
+    "id": "vortex",
+    "name": "Vortex",
+    "type": "standard",
+    "colorKeywords": [
+      "dark",
+      "black",
+      "b&w",
+      "white",
+      "contrast"
+    ],
+    "toneKeywords": [
+      "serious",
+      "classy",
+      "elegant",
+      "professional",
+      "simple",
+      "minimalist",
+      "clean",
+      "luxury",
+      "modern",
+      "futuristic",
+      "thin"
+    ]
+  },
+  {
+    "id": "wine",
+    "name": "Wine",
+    "type": "standard",
+    "colorKeywords": [
+      "dark",
+      "burgundy",
+      "red",
+      "purple"
+    ],
+    "toneKeywords": []
+  },
+  {
+    "id": "wireframe",
+    "name": "Wireframe",
+    "type": "standard",
+    "colorKeywords": [
+      "light gray",
+      "white",
+      "gray",
+      "off-white",
+      "light",
+      "b&w"
+    ],
+    "toneKeywords": [
+      "playful",
+      "fun",
+      "friendly",
+      "casual",
+      "simple",
+      "sketch",
+      "draft",
+      "handwritten"
+    ]
+  },
+  {
+    "id": "zephyr",
+    "name": "Zephyr",
+    "type": "standard",
+    "colorKeywords": [
+      "light",
+      "sky blue",
+      "light-blue",
+      "white",
+      "gradient",
+      "vibrant",
+      "colorful",
+      "cool"
+    ],
+    "toneKeywords": [
+      "playful",
+      "friendly",
+      "clean",
+      "bold",
+      "soft",
+      "modern",
+      "high tech",
+      "futuristic",
+      "fresh",
+      "inspirational",
+      "aesthetic",
+      "creative",
+      "fun"
+    ]
+  }
+]

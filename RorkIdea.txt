@@ -1,0 +1,109 @@
+I was thinking, was use the n8n workflow as a prototype for building an mvp with no storage capability. Just using assembly ai api  for transcription, open ai for the analysis and Gamma api to create and send the result.
+
+That's a smart de-scope. You're essentially building a mobile front-end for the n8n workflow logic, proving the core value proposition ("record → summarize → deliver") before tackling the longitudinal storage complexity.
+
+**MVP Architecture (Rork-Generated):**
+
+```
+┌─────────────────────────────────────────────────────────┐
+│  Mobile App (Rork + Expo)                               │
+│  ├── Record audio (expo-av)                             │
+│  ├── Upload file (expo-document-picker)                 │
+│  ├── Input: appointment date, provider, email           │
+│  └── Processing status UI                               │
+└────────────────┬────────────────────────────────────────┘
+                 │
+                 ↓
+┌─────────────────────────────────────────────────────────┐
+│  Lightweight Backend Proxy (required for API keys)      │
+│  Supabase Edge Functions / Vercel Serverless / n8n     │
+└────────────────┬────────────────────────────────────────┘
+                 │
+        ┌────────┼────────┬────────────────┐
+        ↓        ↓        ↓                ↓
+   AssemblyAI  OpenAI   Gamma API      Gmail API
+   (SLAM-1)    (analysis) (PDF gen)    (delivery)
+```
+
+**Critical Decision: Backend Proxy**
+
+You can't ship API keys (AssemblyAI, OpenAI, Gamma) directly in a mobile app—they'd be trivially extractable. Three options:
+
+| Option | Effort | Cost | Recommendation |
+|--------|--------|------|----------------|
+| **Keep n8n as backend** | Zero | Your existing instance | ✅ Best for MVP—expose a webhook endpoint that accepts audio + metadata, runs your existing workflow |
+| **Supabase Edge Functions** | Medium | Free tier sufficient | Good if you want to decouple from n8n |
+| **Vercel Serverless** | Medium | Free tier | Alternative to Supabase |
+
+**The n8n-as-Backend Play:**
+
+Your existing workflow already does everything. Modify it slightly:
+
+1. Replace Google Drive Trigger with a **Webhook Trigger** that accepts:
+   - Audio file (base64 or multipart)
+   - `appointmentDate`, `providerName`, `specialty`, `recipientEmail`
+
+2. Mobile app POSTs to that webhook, polls for completion (or you add a callback URL)
+
+3. Email delivery already works
+
+This way, Rork only needs to generate the UI layer—recording, file picker, form inputs, status display. The complex orchestration stays in n8n where it's already working.
+
+**Rork Prompt Strategy:**
+
+```
+Build a medical appointment recording app with these screens:
+
+1. HOME SCREEN
+- "Record New Appointment" button (prominent)
+- "Upload Existing Recording" button
+- Simple branding header
+
+2. RECORDING SCREEN  
+- Large circular record button with pulse animation
+- Live waveform visualization during recording
+- Timer showing recording duration
+- Stop button that transitions to Review screen
+
+3. APPOINTMENT DETAILS SCREEN (after recording/upload)
+- Date picker (appointment date, not today)
+- Provider name text input
+- Specialty dropdown (Urology, Cardiology, Primary Care, etc.)
+- Email input for PDF delivery
+- "Process Recording" submit button
+
+4. PROCESSING STATUS SCREEN
+- Step indicators: Uploading → Transcribing → Analyzing → Generating PDF → Sending
+- Progress bar or spinner for current step
+- Estimated time remaining
+- "Processing complete! Check your email" success state
+
+5. ERROR/RETRY SCREEN
+- Friendly error message
+- Retry button
+- Contact support option
+
+Use Expo, React Native, clean medical/healthcare aesthetic 
+(blues, whites, subtle greens), accessible fonts.
+```
+
+**What You'll Need to Hand-Finish:**
+
+1. **API integration layer** → Point to your n8n webhook
+2. **Audio upload logic** → Convert recording to base64 or use multipart form
+3. **Polling mechanism** → Check n8n for completion status (or implement webhooks back to app)
+4. **The healthcare prompt** → Already exists in your n8n workflow, no changes needed
+
+**Timeline Estimate:**
+
+| Phase | Task | Time |
+|-------|------|------|
+| 1 | Rork generates UI scaffold | 2-4 hours |
+| 2 | Modify n8n: add webhook trigger, parameterize email | 2-3 hours |
+| 3 | Connect Rork app to n8n webhook | 3-4 hours |
+| 4 | Testing + polish | 4-6 hours |
+| **Total** | **Working MVP** | **~2 days** |
+
+**Kismet:** The "no storage" MVP constraint actually mirrors how the original Shazam worked—it had no library, no history, just "listen → identify → display." Users loved the instant gratification so much that Shazam deliberately delayed adding history features because they feared it would complicate the magic. Your "record → PDF in email" flow has that same atomic simplicity. The storage/longitudinal features can come after you've validated that patients actually *use* the core loop.
+
+Want me to draft the n8n webhook trigger modification, or help refine the Rork prompt for better output?

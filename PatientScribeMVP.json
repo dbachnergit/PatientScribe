@@ -1,0 +1,903 @@
+{
+  "name": "PatientScribeMVP",
+  "nodes": [
+    {
+      "parameters": {
+        "jsCode": "// ============================================================================\n// CHECK FILE TYPE (PDF / Audio / Text)\n// Determines processing path based on file extension and MIME type\n// PRESERVES BINARY DATA for downstream nodes\n// ============================================================================\n\nconst input = $input.first();\nconst inputJson = input.json;\nconst inputBinary = input.binary;  // CRITICAL: Preserve binary data\n\nconst fileName = (inputJson.name || '').toLowerCase();\nconst mimeType = (inputJson.mimeType || '').toLowerCase();\n\n// ============================================================================\n// FILE TYPE DETECTION\n// ============================================================================\n\n// Audio file extensions\nconst audioExtensions = ['.mp3', '.m4a', '.wav', '.webm', '.ogg', '.flac', '.mpeg', '.mpga', '.mp4'];\nconst isAudio = audioExtensions.some(ext => fileName.endsWith(ext)) || mimeType.includes('audio/');\n\n// PDF detection\nconst isPDF = fileName.endsWith('.pdf') || mimeType.includes('pdf');\n\n// Text file extensions\nconst textExtensions = ['.txt', '.json', '.vtt'];\nconst isText = textExtensions.some(ext => fileName.endsWith(ext)) || mimeType.includes('text/');\n\n// Determine file type\nlet fileType = 'unknown';\nif (isAudio) {\n  fileType = 'audio';\n} else if (isPDF) {\n  fileType = 'pdf';\n} else if (isText) {\n  fileType = 'text';\n}\n\n// ============================================================================\n// RETURN FILE TYPE METADATA + BINARY DATA\n// ============================================================================\n\nreturn [{\n  json: {\n    ...inputJson,\n    fileType: fileType,\n    isAudio: isAudio,\n    isPDF: isPDF,\n    isText: isText,\n    detectionDebug: {\n      fileName: fileName,\n      mimeType: mimeType,\n      detectedType: fileType,\n      hasBinaryData: !!inputBinary,  // Track if binary data present\n      timestamp: new Date().toISOString()\n    }\n  },\n  binary: inputBinary  // CRITICAL: Pass through binary data\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -880,
+        48
+      ],
+      "id": "956ce4a5-bb9e-4c87-b71a-22ad2a7135de",
+      "name": "Check File Type"
+    },
+    {
+      "parameters": {
+        "operation": "pdf",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        -480,
+        0
+      ],
+      "id": "82de864c-c780-4416-ace1-0dfbce47a2b4",
+      "name": "Extract PDF"
+    },
+    {
+      "parameters": {
+        "operation": "text",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        -480,
+        144
+      ],
+      "id": "a7f9e72a-18fe-4349-aa79-17e232fe1f97",
+      "name": "Extract from File"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Handle JSON/VTT - Normalize transcript data to $json.data\n// ENHANCED: Preserve meeting date metadata from Merge Meeting Date node\nconst input = $input.first().json;\n\n// First, get the raw input from various possible fields\nlet rawData = input.data || input.text || input.content || '';\nconst mimeType = input.mimeType || '';\nlet extractedText = rawData;\nlet metadata = {};\n\n// Check if this is a JSON file\nif (mimeType === 'application/json' || (typeof rawData === 'string' && rawData.startsWith('{'))) {\n  try {\n    const jsonData = JSON.parse(rawData);\n    // Look for transcript in common fields\n    if (jsonData.transcript) {\n      extractedText = jsonData.transcript;\n    } else if (jsonData.text) {\n      extractedText = jsonData.text;\n    } else if (jsonData.content) {\n      extractedText = jsonData.content;\n    } else if (jsonData.transcription) {\n      extractedText = jsonData.transcription;\n    } else if (jsonData.segments) {\n      // Whisper API format\n      extractedText = jsonData.segments.map(s => s.text).join(' ');\n    }\n    metadata = jsonData.metadata || {};\n  } catch (e) {\n    // Not JSON, keep as is\n  }\n}\n\n// Check for VTT format\nif (mimeType === 'text/vtt' || (typeof extractedText === 'string' && extractedText.includes('WEBVTT'))) {\n  const lines = extractedText.split('\\n');\n  let transcript = '';\n  for (const line of lines) {\n    if (!line.includes('-->') && !line.match(/^\\d+$/) && !line.startsWith('WEBVTT') && line.trim()) {\n      transcript += line.replace(/<[^>]*>/g, '').trim() + ' ';\n    }\n  }\n  extractedText = transcript.trim();\n  metadata.format = 'vtt';\n}\n\n// Return normalized format with meeting date metadata preserved\nreturn [{\n  json: {\n    data: extractedText,\n    metadata: metadata,\n    // Preserve meeting date fields from Merge Meeting Date node\n    meetingDate: input.meetingDate,\n    meetingDateFormatted: input.meetingDateFormatted,\n    meetingDateShort: input.meetingDateShort,\n    meetingDateSource: input.meetingDateSource\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 1,
+      "position": [
+        -256,
+        144
+      ],
+      "id": "9546ea95-ee5a-4b9e-aee4-2bfd9a533dbd",
+      "name": "Handle JSON/VTT"
+    },
+    {
+      "parameters": {
+        "jsCode": "// ============================================================================\n// HEALTHCARE METADATA CLASSIFIER\n// Detects healthcare specialty and extracts metadata for patient summaries\n// ============================================================================\n\nconst input = $input.first().json;\nconst transcript = input.data || '';\nconst fileName = $('Process Webhook Payload').item.json.name || '';\n\n// ============================================================================\n// HEALTHCARE KEYWORDS (Validation)\n// ============================================================================\n\nconst healthcareKeywords = [\n  'patient', 'doctor', 'physician', 'dr.', 'dr ', 'nurse',\n  'diagnosis', 'treatment', 'symptoms', 'medication',\n  'dosage', 'prescription', 'exam', 'test results',\n  'lab work', 'hospital', 'clinic', 'office visit',\n  'psa', 'blood pressure', 'heart rate', 'cholesterol',\n  'ultrasound', 'surgery', 'post-surgery', 'follow-up',\n  'medical', 'clinical', 'health', 'provider',\n  'urologist', 'cardiologist', 'oncologist', 'therapist'\n];\n\n// ============================================================================\n// HEALTHCARE VALIDATION\n// ============================================================================\n\nconst lowerTranscript = transcript.toLowerCase();\nconst lowerFileName = fileName.toLowerCase();\nconst combinedText = lowerTranscript + ' ' + lowerFileName;\n\n// Count healthcare keyword matches\nlet healthcareScore = 0;\n\nfor (const keyword of healthcareKeywords) {\n  const regex = new RegExp('\\\\b' + keyword + '\\\\b', 'g');\n  const matches = combinedText.match(regex);\n  if (matches) {\n    healthcareScore += matches.length;\n  }\n}\n\n// Validate this is actually a healthcare transcript\nif (healthcareScore < 3) {\n  throw new Error(`Transcript does not appear to be from a healthcare appointment (score: ${healthcareScore}).\n\nHealthcare keywords found: ${healthcareScore}\nMinimum required: 3\n\nPlease verify:\n- This is a medical/dental/therapy appointment transcript\n- The file contains actual healthcare conversation content\n- The file is not empty or corrupted\n\nIf this is a healthcare transcript, please contact support.`);\n}\n\n// ============================================================================\n// SPECIALTY DETECTION (Multi-Specialty Foundation)\n// ============================================================================\n\nconst specialtyPatterns = {\n  'dental': ['dentist', 'dental', 'tooth', 'teeth', 'cavity', 'filling', 'crown', 'root canal', 'gums', 'cleaning', 'orthodont'],\n  'physical-therapy': ['physical therapist', 'PT ', ' pt ', 'range of motion', 'ROM', 'exercises', 'strengthening', 'stretching', 'mobility', 'rehab'],\n  'mental-health': ['therapist', 'psychologist', 'psychiatrist', 'counselor', 'anxiety', 'depression', 'therapy session', 'coping', 'mental health', 'behavioral'],\n  'urology': ['urologist', 'prostate', 'PSA', 'bladder', 'kidney', 'urinary', 'urine'],\n  'cardiology': ['cardiologist', 'heart', 'cardiac', 'blood pressure', 'EKG', 'ECG', 'echocardiogram', 'cholesterol', 'cardiovascular'],\n  'oncology': ['oncologist', 'cancer', 'tumor', 'chemotherapy', 'chemo', 'radiation', 'metastasis', 'biopsy', 'malignant'],\n  'endocrinology': ['endocrinologist', 'diabetes', 'diabetic', 'thyroid', 'A1C', 'glucose', 'insulin', 'blood sugar', 'hormone'],\n  'primary-care': ['primary care', 'family doctor', 'general practitioner', 'annual physical', 'checkup', 'wellness visit', 'PCP'],\n  'dermatology': ['dermatologist', 'skin', 'rash', 'mole', 'melanoma', 'acne', 'dermatology', 'eczema', 'psoriasis'],\n  'orthopedics': ['orthopedic', 'orthopedist', 'bone', 'joint', 'fracture', 'arthritis', 'knee', 'hip', 'shoulder', 'spine']\n};\n\n// Score each specialty\nconst specialtyScores = {};\n\nfor (const [specialty, keywords] of Object.entries(specialtyPatterns)) {\n  let score = 0;\n  for (const keyword of keywords) {\n    const regex = new RegExp('\\\\b' + keyword.toLowerCase() + '\\\\b', 'g');\n    const matches = combinedText.match(regex);\n    if (matches) {\n      score += matches.length;\n    }\n  }\n  specialtyScores[specialty] = score;\n}\n\n// Find highest scoring specialty\nlet detectedSpecialty = 'general-medical';  // Default\nlet maxSpecialtyScore = 0;\n\nfor (const [specialty, score] of Object.entries(specialtyScores)) {\n  if (score > maxSpecialtyScore && score >= 2) {  // Require at least 2 keyword matches\n    maxSpecialtyScore = score;\n    detectedSpecialty = specialty;\n  }\n}\n\n// ============================================================================\n// PROVIDER DETECTION (Enhanced with Role)\n// ============================================================================\n\nconst providerMatch = transcript.match(/Dr\\.?\\s+([A-Z][a-z]+)/i);\nlet providerName = 'Your healthcare provider';\nlet providerRole = detectedSpecialty;  // Infer role from detected specialty\n\nif (providerMatch) {\n  providerName = `Dr. ${providerMatch[1]}`;\n\n  // Try to detect provider role from context around their name\n  const contextRegex = new RegExp(`(\\\\w+)\\\\s+Dr\\\\.?\\\\s+${providerMatch[1]}`, 'i');\n  const roleMatch = transcript.match(contextRegex);\n\n  if (roleMatch) {\n    const potentialRole = roleMatch[1].toLowerCase();\n    // Map common titles to specialties\n    const titleMap = {\n      'urologist': 'urology',\n      'cardiologist': 'cardiology',\n      'dentist': 'dental',\n      'therapist': 'physical-therapy',\n      'psychologist': 'mental-health',\n      'psychiatrist': 'mental-health',\n      'oncologist': 'oncology',\n      'endocrinologist': 'endocrinology',\n      'dermatologist': 'dermatology',\n      'orthopedist': 'orthopedics',\n      'orthopedic': 'orthopedics'\n    };\n    providerRole = titleMap[potentialRole] || detectedSpecialty;\n  }\n}\n\n// ============================================================================\n// CLINICAL CONTEXT DETECTION\n// ============================================================================\n\nlet appointmentType = 'follow-up';  // Default\n\nif (/\\b(diagnosis|diagnosing|diagnosed|new diagnosis)\\b/i.test(transcript)) {\n  appointmentType = 'diagnosis';\n} else if (/\\b(treatment|treating|therapy|starting treatment)\\b/i.test(transcript)) {\n  appointmentType = 'treatment-planning';\n} else if (/\\b(consultation|consult|consulting|initial visit|first visit)\\b/i.test(transcript)) {\n  appointmentType = 'consultation';\n} else if (/\\b(follow.?up|monitoring|check.?up|routine visit)\\b/i.test(transcript)) {\n  appointmentType = 'follow-up-monitoring';\n} else if (/\\b(post.?op|after surgery|post.?surgery|surgical follow.?up)\\b/i.test(transcript)) {\n  appointmentType = 'post-operative';\n}\n\n// ============================================================================\n// PATIENT PRESENCE DETECTION\n// ============================================================================\n\nconst patientPresent = /\\b(I am|I'm|my|me|myself)\\b/i.test(transcript);\n\n// ============================================================================\n// SENSITIVE DATA FLAGS\n// ============================================================================\n\nconst sensitiveDataFlags = {\n  phi: true,  // Healthcare data is always PHI\n  pii: /\\b(\\d{3}-\\d{2}-\\d{4}|\\d{9})\\b/.test(transcript),  // SSN pattern\n  financialData: /\\b(credit card|account number|routing number|card number)\\b/i.test(transcript)\n};\n\n// Log warning if sensitive data detected\nif (sensitiveDataFlags.pii || sensitiveDataFlags.financialData) {\n  console.warn('⚠️  SENSITIVE DATA DETECTED:', {\n    fileName: fileName,\n    pii: sensitiveDataFlags.pii,\n    financialData: sensitiveDataFlags.financialData,\n    timestamp: new Date().toISOString()\n  });\n}\n\n// ============================================================================\n// RETURN ENRICHED DATA\n// ============================================================================\n\nreturn [{\n  json: {\n    ...input,\n    healthcareScore: healthcareScore,\n    healthcareMetadata: {\n      specialty: detectedSpecialty,\n      specialtyScore: maxSpecialtyScore,\n      appointmentType: appointmentType,\n      provider: {\n        name: providerName,\n        role: providerRole,\n        isPrimary: true\n      },\n      patientPresent: patientPresent\n    },\n    sensitiveDataFlags: sensitiveDataFlags\n  }\n}];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -96,
+        0
+      ],
+      "id": "52ce77ea-ecf1-4c5c-b16d-4a4f0fa45206",
+      "name": "Healthcare Metadata Classifier"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.data }}",
+        "hasOutputParser": true,
+        "messages": {
+          "messageValues": [
+            {
+              "message": "=You are a medical communication specialist helping patients understand their doctor visits.\n\n# INPUT DATA\n**Meeting Date:** {{ $('Process Webhook Payload').item.json.meetingDateFormatted }}\n**Transcript:** {{ $('Healthcare Metadata Classifier').item.json.data }}\n\n# CRITICAL DATE CONTEXT\n**Today's Date:** {{ $('Process Webhook Payload').item.json.meetingDateFormatted }}\n\n**IMPORTANT for Date Calculations:**\nWhen the transcript mentions future appointments (e.g., \"six months\", \"spring\", \"next year\"), ALWAYS calculate from today's date shown above.\n\n**Examples:**\n- If today is November 14, 2025, and transcript says \"six months\" → **May 2026** (NOT May 2025)\n- If today is November 14, 2025, and transcript says \"spring\" → **March-May 2026**\n- If today is January 15, 2025, and transcript says \"3 months\" → **April 2025**\n\n**Verification Rule:**\nFuture appointments must ALWAYS be AFTER today's date. If you calculate a date in the past, you made an error.\n\n# YOUR TASK\n\nCreate a 7-slide patient visit summary (1200-1500 words total).\nUse exactly 6 section breaks (---) to create 7 slides.\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n## SLIDE 1: VISIT OVERVIEW (~150 words)\n\n**Date:** {{ $('Process Webhook Payload').item.json.meetingDateFormatted}}\n**Provider:** [Extract from transcript - use \"Dr. [Last Name]\" format]\n**Visit Type:** [Follow-up Monitoring | New Diagnosis | Treatment Planning | Consultation]\n**Your Current Status:** [One-sentence summary in reassuring tone]\n\n**Key Points Covered:**\n- [Main topic 1]\n- [Main topic 2]\n- [Main topic 3]\n\n---\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n## SLIDE 2: KEY NUMBERS & WHAT THEY MEAN (~200-250 words)\n\n**Your Latest Results:**\n\nFor each test/metric mentioned in the transcript:\n\n**[Metric Name] (e.g., PSA, Blood Pressure, A1C):**\n- **Your Result:** [Value with units] (Date: [when measured])\n- **Previous Result:** [Value] (Date: [when measured]) - [trend description: stable/improved/increased]\n- **Reference Range:** [Normal range or threshold values]\n- **What This Means:** [Plain-language interpretation - explain what the number indicates about your health]\n\n**Visual Context:**\n[Describe where patient stands using zones:]\n- 🟢 **Safe Zone:** [Value range] - Your current status\n- 🟡 **Watch Zone:** [Value range] - Regular monitoring\n- 🔴 **Concern Zone:** [Value range] - Requires action\n\n**Trend Over Time:**\n[If multiple visits mentioned, describe the trajectory: \"Your [metric] has been stable around [range] over the past [timeframe], which is excellent for someone [X years] post-[treatment/surgery].\"]\n\n---\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n## SLIDE 3: WHAT YOUR DOCTOR SAID (~250-300 words)\n\n**Assessment:**\n[Provider's evaluation translated to 8th-grade reading level. Avoid medical jargon or explain it immediately.]\n\n**Key Points from Your Doctor:**\n- [Main message 1 - translate medical terms]\n  - **Medical term explained:** [If doctor used technical language, define it here]\n- [Main message 2 - provide context]\n- [Main message 3 - emphasize reassurance when appropriate]\n\n**What This Means for You:**\n[Bottom-line interpretation in everyday language]\n\n**Questions Your Doctor Answered:**\n- [Question 1 and answer summary]\n- [Question 2 and answer summary]\n\n**Why This Matters:**\n[Connect the assessment to the patient's overall health goals or long-term outlook]\n\n---\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n## SLIDE 4: YOUR TREATMENT PLAN (~200-250 words)\n\n**Medications:**\n[For each medication mentioned:]\n- **[Drug Name]** - [Purpose in plain language] - [Dosage] - [How often]\n  - When to take: [Morning/evening/with food]\n  - Important: [Any warnings or side effects mentioned]\n\n**Lifestyle Recommendations:**\n[If discussed:]\n- **Diet:** [Specific guidance]\n- **Exercise:** [Activity recommendations]\n- **Habits:** [Changes to make]\n\n**Procedures or Tests Scheduled:**\n[If any mentioned:]\n- **[Procedure/Test Name]**\n  - What it is: [Brief explanation]\n  - When: [Date or timeframe]\n  - Where: [Location if mentioned]\n  - Why: [Purpose]\n\n**Follow-up Testing:**\n- **[Test Name]** - [When to schedule] - [Purpose]\n\n**Continue Current Plan:**\n[If treatment is staying the same, explain why that's good news]\n\n---\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n## SLIDE 5: WHAT TO WATCH FOR (~200 words)\n\n**Normal Symptoms to Expect:**\n[If recovering from procedure or adjusting to medication:]\n- [Expected symptom 1] - This is normal\n- [Expected symptom 2] - Should improve within [timeframe]\n\n**Warning Signs - When to Call Your Doctor:**\n[Be specific and clear:]\n- 🔴 **Call Immediately if:**\n  - [Serious symptom 1]\n  - [Serious symptom 2]\n  - [Serious symptom 3]\n\n- 🟡 **Schedule an Appointment if:**\n  - [Concerning but not urgent symptom 1]\n  - [Concerning but not urgent symptom 2]\n\n**Questions to Ask Yourself:**\n[Framework for self-monitoring:]\n- Is this symptom getting better or worse?\n- Does it interfere with daily activities?\n- Have I seen this pattern before?\n\n**Who to Contact:**\n- **Office Phone:** [If mentioned in transcript]\n- **After-Hours:** [If mentioned]\n\n---\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n## SLIDE 6: YOUR ACTION CHECKLIST (~150-200 words)\n\n**Your To-Do List:**\n\n| Action | Your Responsibility | Timeline | Status |\n|--------|---------------------|----------|--------|\n| [e.g., Schedule 6-month PSA test] | Patient | By [specific date or \"before next visit\"] | ⚪ Not Started |\n| [e.g., Complete lab work] | Patient | Within [timeframe] | ⚪ Pending |\n| [e.g., Continue current medication] | Patient | Ongoing | ✅ Active |\n| [e.g., Schedule follow-up appointment] | Patient/Office | [Timeframe] | ⚪ Pending |\n\n**Priority Actions (This Week):**\n1. [Most urgent action]\n2. [Second priority]\n3. [Third priority]\n\n**Before Your Next Visit:**\n- [Preparation step 1]\n- [Preparation step 2]\n\n**Questions to Bring to Next Appointment:**\n- [Question patient might want to ask based on discussion]\n\n---\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n## SLIDE 7: UNDERSTANDING YOUR CONDITION (~200-250 words)\n\n**Why This Monitoring Matters:**\n[Educational content about the condition - explain in simple terms]\n\n**What We're Watching For:**\n[Explain the monitoring strategy:]\n- [What indicator 1 tells us]\n- [What indicator 2 tells us]\n- [How we decide on next steps]\n\n**Long-term Outlook:**\n[Reassuring context when appropriate:]\n- [Positive trend or stability message]\n- [What success looks like for this condition]\n- [Timeframe expectations]\n\n**Living Well with [Condition]:**\n[Practical advice if discussed:]\n- [Lifestyle tip 1]\n- [Lifestyle tip 2]\n\n**Resources for Learning More:**\n[If specific resources mentioned, list them. Otherwise, suggest:]\n- Patient education materials from [specialty] association\n- Support groups for [condition]\n- Reputable medical websites\n\n**Next Appointment:**\n**When:** [Timeframe - e.g., \"6 months\", \"3 months\"]\n**Purpose:** [What will be checked/discussed]\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n# CRITICAL REQUIREMENTS\n\n## Medical Jargon → Plain Language Translation\n\n**MANDATORY TRANSLATIONS:**\n- \"Biochemical recurrence\" → \"The level where doctors start to be concerned\"\n- \"Ultrasensitive PSA\" → \"A very precise test that can detect tiny amounts\"\n- \"Post-surgical monitoring\" → \"Checking to make sure everything stays healthy after your surgery\"\n- \"Within normal limits\" → \"Your results look good\"\n- \"Stable\" → \"Not changing, which is what we want to see\"\n\n**Translation Rules:**\n- Use 8th-grade reading level (Hemingway scale)\n- Define any medical term immediately after first use\n- Use analogies when helpful: \"PSA is like a smoke detector for your prostate health\"\n- Replace percentages with fractions when clearer: \"3 out of 4 patients\" instead of \"75%\"\n\n## Contextualize ALL Metrics\n\n**REQUIRED CONTEXT for every number:**\n1. **Current Value:** [Number with units]\n2. **Threshold/Reference:** [What's normal or concerning]\n3. **Trend:** [Up/down/stable from previous]\n4. **Interpretation:** [What this means for patient's health]\n\n**Example (PSA):**\n\"Your PSA is 0.18 (November 2025), which is stable compared to 0.15 six months ago. The level where doctors start to be concerned is 0.2, so you're comfortably below that threshold. This stability eight years after surgery is exactly what we want to see.\"\n\n## Reassurance Framing (When Appropriate)\n\n**Reassuring Language (use when clinically accurate):**\n- \"This is excellent news\"\n- \"Exactly what we want to see\"\n- \"Very reassuring\"\n- \"No cause for concern\"\n- \"Right on track\"\n\n**NEVER Minimize Legitimate Concerns:**\n- If doctor expressed concern, reflect that honestly\n- If test requires follow-up, explain why without alarm\n- Balance reassurance with necessary caution\n\n## PHI Handling\n\n**Use \"You\" Language:**\n- Address patient directly: \"Your PSA\", \"Your doctor said\", \"Your next appointment\"\n\n**Provider Names:**\n- Use \"Dr. [Last Name]\" format (e.g., \"Dr. Saram\" not \"Dr. Steven Saram\")\n- Avoid full names unless critical for context\n\n**Keep Clinical Details:**\n- Numbers, dates, test names are necessary for care continuity\n- Medication names and dosages are essential\n- Treatment history is important context\n\n**Avoid Identifiers:**\n- No medical record numbers (MRN)\n- No Social Security numbers\n- No full addresses\n- No insurance details\n\n## Preserve Specifics\n\n**Extract and Preserve:**\n- All numbers mentioned (test results, dosages, timeframes)\n- All dates (visit date, next appointment, test schedules)\n- All medication names and dosages\n- Exact provider quotes when impactful\n- Warning signs and symptoms to watch for\n- Action items with deadlines\n\n**Maintain Accuracy:**\n- Don't round numbers (0.18 not \"about 0.2\")\n- Don't approximate dates (\"November 15\" not \"mid-November\")\n- Don't paraphrase medication dosages\n- Don't generalize warning signs\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n# OUTPUT FORMAT\n\n**Structure:**\n- Use markdown formatting: `# Headers`, `## Subheaders`, `**bold**`, `- bullets`\n- Use emojis for visual indicators: ✅ 🟢 🟡 🔴 ⚪ ❓\n- Use tables for action items and medication lists\n- 6 section breaks total (---) creates 7 slides\n- 1200-1500 words total across all sections\n\n**Tone:**\n- Professional medical + warm + educational + reassuring\n- Empowering (patient as active participant in their health)\n- Clear and direct (no euphemisms or corporate-speak)\n- Respectful of patient intelligence\n\n**Start Immediately:**\n- Begin directly with \"# Visit Overview\"\n- No preamble or explanatory text before or after\n- Output only the 7-slide content\n\n**Remember:**\nUse `━━━━━━` only in this prompt template for visual separation.\nIn your output, use `---` for section breaks between slides.\n"
+            }
+          ]
+        },
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.7,
+      "position": [
+        64,
+        0
+      ],
+      "id": "f059e7e3-06ec-441c-8640-d27ee9f31dae",
+      "name": "Healthcare Patient Analysis"
+    },
+    {
+      "parameters": {
+        "jsCode": "// ============================================================================\n// CONSTRUCT HEALTHCARE GAMMA PAYLOAD\n// Healthcare-specific theme selection + Gamma API v1.0 payload construction\n// ============================================================================\n\nconst input = $input.first().json;\nconst analysisText = input.text || input.output || '';\nconst meetingDate = $('Process Webhook Payload').item.json.meetingDateFormatted;\nconst fileName = $('Process Webhook Payload').item.json.name;\n\n// ============================================================================\n// GAMMA THEME IDS (Healthcare themes)\n// ============================================================================\n\nconst THEME_IDS = {\n  pearl: 'pearl',      // Clinical, professional\n  sage: 'sage',        // Organic, caring, wellness\n  consultant: 'consultant'  // Trustworthy, analytical\n};\n\n// ============================================================================\n// HEALTHCARE THEME SELECTION (keyword scoring)\n// ============================================================================\n\nconst healthcareKeywords = {\n  clinical: {\n    keywords: ['diagnosis', 'treatment', 'surgery', 'procedure', 'test results', 'clinical'],\n    theme: 'pearl',\n    weight: 2\n  },\n  wellness: {\n    keywords: ['wellness', 'preventive', 'nutrition', 'lifestyle', 'holistic', 'natural'],\n    theme: 'sage',\n    weight: 2\n  },\n  chronic: {\n    keywords: ['monitoring', 'followup', 'follow-up', 'chronic', 'management', 'ongoing'],\n    theme: 'consultant',\n    weight: 3\n  }\n};\n\n// Score each theme\nconst themeScores = {};\nconst lowerText = analysisText.toLowerCase();\n\nfor (const [category, config] of Object.entries(healthcareKeywords)) {\n  let score = 0;\n  for (const keyword of config.keywords) {\n    const regex = new RegExp('\\\\b' + keyword + '\\\\b', 'gi');\n    const matches = lowerText.match(regex);\n    if (matches) {\n      score += matches.length * config.weight;\n    }\n  }\n  themeScores[config.theme] = (themeScores[config.theme] || 0) + score;\n}\n\n// Select theme with highest score (default to consultant if tie)\nlet selectedTheme = 'consultant';\nlet maxScore = 0;\n\nfor (const [theme, score] of Object.entries(themeScores)) {\n  if (score > maxScore) {\n    maxScore = score;\n    selectedTheme = theme;\n  }\n}\n\n// ============================================================================\n// IMAGE STYLE BASED ON THEME\n// ============================================================================\n\nconst imageStyles = {\n  pearl: 'clean, medical, professional, clinical photography',\n  sage: 'natural, organic, wellness, calming earth tones',\n  consultant: 'professional, trustworthy, healthcare, modern medical'\n};\n\n// ============================================================================\n// CONSTRUCT GAMMA PAYLOAD\n// ============================================================================\n\nconst gammaPayload = {\n  inputText: analysisText,\n  textMode: 'preserve',  // Don't rewrite patient language\n  format: 'presentation',\n  themeId: THEME_IDS[selectedTheme],\n  numCards: 7,  // Fixed 7 slides\n  cardSplit: 'inputTextBreaks',  // Respect --- breaks\n\n  additionalInstructions: [\n    'Preserve medical terminology with plain-language explanations.',\n    'Use patient-friendly visual layouts for health data (tables, timelines, status indicators).',\n    'Display meeting date prominently on title slide.',\n    'Include \"Confidential Medical Record\" footer on all slides except title.',\n    'Emphasize action items and follow-up requirements with clear visual hierarchy.',\n    'Use visual health indicators (green=safe, yellow=watch, red=urgent) where appropriate.',\n    'Maintain reassuring professional medical tone throughout.',\n    'Preserve all specific numbers, dates, and medication dosages exactly as written.'\n  ].join(' '),\n\n  exportAs: 'pdf',\n\n  textOptions: {\n    amount: 'detailed',\n    tone: 'professional medical, warm, educational, reassuring',\n    audience: 'patient and family members',\n    language: 'en'\n  },\n\n  imageOptions: {\n    source: 'aiGenerated',\n    model: 'gemini-2.5-flash-image',\n    style: imageStyles[selectedTheme]\n  },\n\n  cardOptions: {\n    dimensions: '16x9',\n    headerFooter: {\n      bottomLeft: {\n        type: 'text',\n        value: `${meetingDate} | Confidential Medical Record`,\n        size: 'sm'\n      },\n      bottomRight: {\n        type: 'cardNumber'\n      },\n      hideFromFirstCard: true\n    }\n  },\n\n  sharingOptions: {\n    workspaceAccess: 'edit',\n    externalAccess: 'view'\n  }\n};\n\n// ============================================================================\n// RETURN PAYLOAD + METADATA\n// ============================================================================\n\nreturn [{\n  json: {\n    output: gammaPayload,\n    metadata: {\n      selectedTheme: selectedTheme,\n      themeScores: themeScores,\n      meetingDate: meetingDate,\n      fileName: fileName,\n      analysisWordCount: analysisText.split(/\\s+/).length,\n      timestamp: new Date().toISOString()\n    }\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        352,
+        0
+      ],
+      "id": "58f972ef-1d6a-4013-9822-45c23f1462cb",
+      "name": "Construct Healthcare Payload"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://public-api.gamma.app/v1.0/generations",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ $json.output }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        560,
+        0
+      ],
+      "id": "514eccb1-24c1-4bba-80a4-a03261512720",
+      "name": "Generate Healthcare Presentation",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "v58YEG3NmyitKQOv",
+          "name": "Gamma API Key"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "=https://public-api.gamma.app/v1.0/generations/{{ $('Generate Healthcare Presentation').item.json.generationId }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        784,
+        0
+      ],
+      "id": "b351fbb9-31b6-4067-ae6b-537e8259ab2e",
+      "name": "Check Generation Status - Healthcare",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "v58YEG3NmyitKQOv",
+          "name": "Gamma API Key"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Healthcare Presentation Retry Logic\nconst input = $input.first().json;\nconst maxRetries = 20;  // 20 retries × 15s = 5 min max\nconst retryCount = input.retryCount || 0;\n\nif (retryCount >= maxRetries) {\n  throw new Error(`Healthcare presentation generation timed out after ${maxRetries} retries (${maxRetries * 15} seconds)`);\n}\n\nreturn [{\n  json: {\n    ...input,\n    retryCount: retryCount + 1\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        976,
+        0
+      ],
+      "id": "c2b2b0f3-8bbe-43f6-8670-fc8a765709f3",
+      "name": "Handle Retry Logic - Healthcare"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 1
+          },
+          "conditions": [
+            {
+              "id": "c19a24fe-02b7-4d4b-8e8e-a68b91756d22",
+              "leftValue": "={{ $json.status }}",
+              "rightValue": "completed",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        1152,
+        0
+      ],
+      "id": "761f899f-f284-4808-bb01-4c7a0b63d060",
+      "name": "Is Generation Complete? - Healthcare"
+    },
+    {
+      "parameters": {
+        "amount": 15
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        1008,
+        224
+      ],
+      "id": "993904ae-45f4-4be8-8ed0-c96980a632ec",
+      "name": "Wait 15 seconds - Healthcare",
+      "webhookId": "b55140f0-b1a2-4590-9733-30ce7dadfd74"
+    },
+    {
+      "parameters": {
+        "jsCode": "const input = $input.first().json;\nconst meetingDate = $('Process Webhook Payload').item.json.meetingDateFormatted;\nconst fileName = $('Process Webhook Payload').item.json.name;\nconst healthcareMetadata = $('Healthcare Metadata Classifier').item.json.healthcareMetadata;\n\nreturn [{\n  json: {\n    presentationUrl: input.gammaUrl,\n    exportUrl: input.exportUrl,\n    generationId: input.generationId,\n    status: input.status,\n    meetingDate: meetingDate,\n    originalFileName: fileName,\n    healthcareMetadata: healthcareMetadata,\n    createdAt: input.createdAt,\n    updatedAt: input.updatedAt\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1344,
+        -16
+      ],
+      "id": "331f789a-8791-46c0-8334-86ce2fe6c8f2",
+      "name": "Prepare Output Data - Healthcare"
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('Process Webhook Payload').item.json.recipientEmail }}",
+        "subject": "=Your Medical Visit Summary ({{ $('Process Webhook Payload').item.json.meetingDateFormatted }})",
+        "emailType": "text",
+        "message": "=Your medical visit summary is ready.\n\n**Visit Date:** {{ $('Process Webhook Payload').item.json.meetingDateFormatted }}\n**Provider:** {{ $json.healthcareMetadata.provider.name || 'Your healthcare provider' }}\n\n**Gamma Presentation:** {{ $json.presentationUrl }}\n\n**PDF Download:** {{ $json.exportUrl }}\n\n⚠️ **CONFIDENTIAL MEDICAL RECORD**\nThis summary contains protected health information (PHI). Do not forward without patient authorization.\n\nQuestions about your visit? Contact your provider's office directly.\n\n**Original file:** {{ $('Process Webhook Payload').item.json.name }}\n\n---\nThis summary was generated to help you remember and understand your medical visit. It is not a substitute for medical advice. Always follow your healthcare provider's direct instructions.",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        1536,
+        -16
+      ],
+      "id": "be627fbd-0252-4140-8ed3-1209e4be166d",
+      "name": "Send Healthcare Email",
+      "webhookId": "7fe073ed-b263-4689-aba3-2b84ca3eaa5b",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "ZWg3TzOLOBRwS0B9",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "openai/gpt-5.1",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        64,
+        176
+      ],
+      "id": "01a874ca-8d78-4b1c-8fdd-3b424c2eaf33",
+      "name": "OpenRouter Chat Model2",
+      "credentials": {
+        "openRouterApi": {
+          "id": "AfZYknoqBJOf8tWD",
+          "name": "OpenRouter account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 1
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.fileType }}",
+                    "rightValue": "pdf",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "697f83be-9fa6-4602-a2d1-0438d45013c7"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "PDF"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 1
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.fileType }}",
+                    "rightValue": "text",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "b807affe-6bd1-470e-adaf-4477ae624f12"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Text"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 1
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.fileType }}",
+                    "rightValue": "audio",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "55b25be2-7a4f-45ab-9226-108c98c3a585"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Audio"
+            }
+          ]
+        },
+        "options": {
+          "fallbackOutput": "extra"
+        }
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3,
+      "position": [
+        -704,
+        16
+      ],
+      "id": "67c8e91c-7a7d-4dc4-b5fe-94ffe8d97b84",
+      "name": "Route by File Type"
+    },
+    {
+      "parameters": {
+        "jsCode": "// ============================================================================\n// MERGE TRANSCRIPTS FROM ALL SOURCES\n// Normalizes PDF, Audio (AssemblyAI), and Text outputs to unified $json.data format\n// ============================================================================\n\nconst input = $input.all();\n\n// Determine transcript source and extract text\nlet transcriptText = '';\nlet transcriptSource = 'unknown';\n\nfor (const item of input) {\n  // AssemblyAI outputs to .text field (after normalization)\n  if (item.json.text) {\n    transcriptText = item.json.text;\n    // Detect source: AssemblyAI has assemblyaiMetadata, Whisper doesn't\n    transcriptSource = item.json.assemblyaiMetadata ? 'assemblyai-slam1' : 'whisper';\n    break;\n  }\n\n  // PDF extraction outputs to .data field\n  if (item.json.data && typeof item.json.data === 'string') {\n    transcriptText = item.json.data;\n    transcriptSource = item.json.source || 'pdf';\n    break;\n  }\n\n  // JSON/VTT handled text also in .data\n  if (item.json.data) {\n    transcriptText = item.json.data;\n    transcriptSource = 'text';\n    break;\n  }\n}\n\n// ============================================================================\n// RETURN NORMALIZED TRANSCRIPT\n// ============================================================================\n\nreturn [{\n  json: {\n    ...input[0].json,  // Preserve all original metadata\n    data: transcriptText,  // Normalized transcript field\n    transcriptSource: transcriptSource,  // Track origin\n    mergeDebug: {\n      inputCount: input.length,\n      source: transcriptSource,\n      textLength: transcriptText.length,\n      timestamp: new Date().toISOString()\n    }\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -256,
+        0
+      ],
+      "id": "a54407b0-07b6-4645-a870-a254a19b0057",
+      "name": "Merge Transcripts"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.assemblyai.com/v2/upload",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "assemblyAiApi",
+        "sendBody": true,
+        "contentType": "binaryData",
+        "inputDataFieldName": "data",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -464,
+        352
+      ],
+      "id": "555ea3f9-898b-4dd1-9e9b-a24db498c3e6",
+      "name": "Upload Audio to AssemblyAI",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "OQvmalQLhm5LYofm",
+          "name": "Mistral OCR"
+        },
+        "assemblyAiApi": {
+          "id": "K3u7RhNtHEheVJIL",
+          "name": "AssemblyAI account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.assemblyai.com/v2/transcript",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "assemblyAiApi",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ {\n  \"audio_url\": $('Upload Audio to AssemblyAI').item.json.upload_url,\n  \"speech_model\": \"slam-1\",\n  \"speaker_labels\": true,\n  \"entity_detection\": true,\n  \"redact_pii\": false,\n  \"keyterms_prompt\": [\"PSA\", \"prostatectomy\", \"biochemical recurrence\", \"Dr. Saram\", \"lisinopril\", \"metoprolol\"]\n} }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -272,
+        352
+      ],
+      "id": "8ffe8e40-8aab-4216-8038-55e70841de0b",
+      "name": "Submit AssemblyAI Medical Transcription",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "OQvmalQLhm5LYofm",
+          "name": "Mistral OCR"
+        },
+        "assemblyAiApi": {
+          "id": "K3u7RhNtHEheVJIL",
+          "name": "AssemblyAI account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "=https://api.assemblyai.com/v2/transcript/{{ $('Submit AssemblyAI Medical Transcription').item.json.id }}",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "assemblyAiApi",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -96,
+        352
+      ],
+      "id": "c29739ac-1ecc-4eca-980d-58a43569c65e",
+      "name": "Get AssemblyAI Transcription Results",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "OQvmalQLhm5LYofm",
+          "name": "Mistral OCR"
+        },
+        "assemblyAiApi": {
+          "id": "K3u7RhNtHEheVJIL",
+          "name": "AssemblyAI account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// AssemblyAI Retry Logic\nconst input = $input.first().json;\nconst maxRetries = 20;  // 20 × 10s = 200 seconds (3.3 min)\nconst retryCount = input.retryCount || 0;\n\nif (retryCount >= maxRetries) {\n  throw new Error(`AssemblyAI transcription timed out after ${maxRetries} retries (${maxRetries * 10} seconds)`);\n}\n\nreturn [{\n  json: {\n    ...input,\n    retryCount: retryCount + 1\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        48,
+        352
+      ],
+      "id": "6e7e2548-2030-4dce-947f-2f7d675799ee",
+      "name": "Handle Retry Logic - AssemblyAI"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 1
+          },
+          "conditions": [
+            {
+              "id": "a1ba7b22-c877-4287-9ca3-936d43105da5",
+              "leftValue": "={{ $json.status }}",
+              "rightValue": "completed",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        224,
+        352
+      ],
+      "id": "81d2062d-d646-4f23-9653-5710adea34aa",
+      "name": "Is AssemblyAI Transcription Complete?"
+    },
+    {
+      "parameters": {
+        "amount": 10
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        176,
+        576
+      ],
+      "id": "d6dadc85-92d0-4df7-847a-3f64a2106b28",
+      "name": "Wait 10 Seconds - AssemblyAI",
+      "webhookId": "d6aac66d-1e65-418f-8d9d-a071777d3304"
+    },
+    {
+      "parameters": {
+        "jsCode": "// ============================================================================\n// NORMALIZE ASSEMBLYAI OUTPUT\n// Converts AssemblyAI response to format expected by downstream nodes\n// ============================================================================\n\nconst input = $input.first().json;\n\nconst transcriptText = input.text || '';\n\nif (!transcriptText || transcriptText.trim().length === 0) {\n  throw new Error('No transcript text found in AssemblyAI response');\n}\n\nconst medications = (input.entities || []).filter(e => e.entity_type === 'drug');\nconst conditions = (input.entities || []).filter(e => e.entity_type === 'medical_condition');\nconst procedures = (input.entities || []).filter(e => e.entity_type === 'medical_process');\n\nreturn [{\n  json: {\n    text: transcriptText,\n    data: transcriptText,\n    \n    assemblyaiMetadata: {\n      transcriptId: input.id,\n      confidence: input.confidence,\n      audioDuration: input.audio_duration,\n      medications: medications,\n      conditions: conditions,\n      procedures: procedures,\n      speakerCount: input.speaker_labels?.speakers || 0,\n      speakerSegments: input.speaker_labels?.segments || []\n    },\n    \n    meetingDate: $('Process Webhook Payload').item.json.meetingDate,\n    meetingDateFormatted: $('Process Webhook Payload').item.json.meetingDateFormatted,\n    meetingDateShort: $('Process Webhook Payload').item.json.meetingDateShort\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        416,
+        352
+      ],
+      "id": "6701edab-00ff-4f21-ac37-16f1ae81a676",
+      "name": "Normalize AssemblyAI Output"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "d233c70b-11cd-4ee8-ade0-f943033281c0",
+        "options": {
+          "allowedOrigins": "*",
+          "binaryPropertyName": "data",
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Access-Control-Allow-Origin",
+                "value": "*"
+              },
+              {
+                "name": "Access-Control-Allow-Methods",
+                "value": "POST, OPTIONS"
+              },
+              {
+                "name": "Access-Control-Allow-Headers",
+                "value": "Content-Type"
+              }
+            ]
+          }
+        }
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -1248,
+        48
+      ],
+      "id": "d25567a0-d605-432f-a055-b5fc77d835e6",
+      "name": "GetRecording",
+      "webhookId": "d233c70b-11cd-4ee8-ade0-f943033281c0"
+    },
+    {
+      "parameters": {
+        "jsCode": "const input = $input.first();\nconst body = input.json.body || input.json || {};\nconst inputBinary = input.binary || {};\n\nconst appointmentDate = body.appointmentDate || '';\nconst providerName = body.providerName || '';\nconst specialty = body.specialty || '';\nconst recipientEmail = body.recipientEmail || '';\nconst fileFormat = body.fileFormat || 'm4a';\n\nlet meetingDate = DateTime.now();\nlet meetingDateSource = 'fallback';\n\nif (appointmentDate) {\n  const parsed = DateTime.fromISO(appointmentDate);\n  if (parsed.isValid) {\n    meetingDate = parsed;\n    meetingDateSource = 'webhook';\n  }\n}\n\nconst mimeTypes = {\n  'm4a': 'audio/m4a',\n  'mp3': 'audio/mpeg',\n  'wav': 'audio/wav',\n  'webm': 'audio/webm',\n  'ogg': 'audio/ogg',\n  'flac': 'audio/flac',\n  'pdf': 'application/pdf',\n  'txt': 'text/plain',\n  'json': 'application/json'\n};\n\nconst mimeType = mimeTypes[fileFormat] || `audio/${fileFormat}`;\nconst fileName = inputBinary.data0?.fileName || `recording.${fileFormat}`;\n\nreturn [{\n  json: {\n    appointmentDate: meetingDate.toISODate(),\n    meetingDate: meetingDate.toISODate(),\n    meetingDateFormatted: meetingDate.toFormat('MMMM d, yyyy'),\n    meetingDateShort: meetingDate.toFormat('MMM d, yyyy'),\n    meetingDateSource: meetingDateSource,\n    providerName: providerName,\n    specialty: specialty,\n    recipientEmail: recipientEmail,\n    fileFormat: fileFormat,\n    name: fileName,\n    mimeType: mimeType\n  },\n  binary: {\n    data: inputBinary.data0\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1072,
+        48
+      ],
+      "id": "c2e86c14-cf5a-4c79-a710-3b216a88dfcd",
+      "name": "Process Webhook Payload"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Extract from File": {
+      "main": [
+        [
+          {
+            "node": "Handle JSON/VTT",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract PDF": {
+      "main": [
+        [
+          {
+            "node": "Merge Transcripts",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Handle JSON/VTT": {
+      "main": [
+        [
+          {
+            "node": "Merge Transcripts",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Healthcare Metadata Classifier": {
+      "main": [
+        [
+          {
+            "node": "Healthcare Patient Analysis",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Healthcare Patient Analysis": {
+      "main": [
+        [
+          {
+            "node": "Construct Healthcare Payload",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Construct Healthcare Payload": {
+      "main": [
+        [
+          {
+            "node": "Generate Healthcare Presentation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Healthcare Presentation": {
+      "main": [
+        [
+          {
+            "node": "Check Generation Status - Healthcare",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Generation Status - Healthcare": {
+      "main": [
+        [
+          {
+            "node": "Handle Retry Logic - Healthcare",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Is Generation Complete? - Healthcare": {
+      "main": [
+        [
+          {
+            "node": "Prepare Output Data - Healthcare",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Wait 15 seconds - Healthcare",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Handle Retry Logic - Healthcare": {
+      "main": [
+        [
+          {
+            "node": "Is Generation Complete? - Healthcare",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait 15 seconds - Healthcare": {
+      "main": [
+        [
+          {
+            "node": "Check Generation Status - Healthcare",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Output Data - Healthcare": {
+      "main": [
+        [
+          {
+            "node": "Send Healthcare Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model2": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Healthcare Patient Analysis",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check File Type": {
+      "main": [
+        [
+          {
+            "node": "Route by File Type",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Route by File Type": {
+      "main": [
+        [
+          {
+            "node": "Extract PDF",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Extract from File",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Upload Audio to AssemblyAI",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge Transcripts": {
+      "main": [
+        [
+          {
+            "node": "Healthcare Metadata Classifier",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload Audio to AssemblyAI": {
+      "main": [
+        [
+          {
+            "node": "Submit AssemblyAI Medical Transcription",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Submit AssemblyAI Medical Transcription": {
+      "main": [
+        [
+          {
+            "node": "Get AssemblyAI Transcription Results",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get AssemblyAI Transcription Results": {
+      "main": [
+        [
+          {
+            "node": "Handle Retry Logic - AssemblyAI",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Handle Retry Logic - AssemblyAI": {
+      "main": [
+        [
+          {
+            "node": "Is AssemblyAI Transcription Complete?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Is AssemblyAI Transcription Complete?": {
+      "main": [
+        [
+          {
+            "node": "Normalize AssemblyAI Output",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Wait 10 Seconds - AssemblyAI",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait 10 Seconds - AssemblyAI": {
+      "main": [
+        [
+          {
+            "node": "Get AssemblyAI Transcription Results",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalize AssemblyAI Output": {
+      "main": [
+        [
+          {
+            "node": "Merge Transcripts",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GetRecording": {
+      "main": [
+        [
+          {
+            "node": "Process Webhook Payload",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Process Webhook Payload": {
+      "main": [
+        [
+          {
+            "node": "Check File Type",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": true
+  },
+  "versionId": "f330c3a5-8795-4ee3-811e-f5c0e76336ad",
+  "meta": {
+    "instanceId": "b55b59280f202e15b6ea26f405acc11f2d45d0bfce666e250470bcb6004b5aa7"
+  },
+  "id": "Qm6bez9pD2X5oMEc",
+  "tags": []
+}
